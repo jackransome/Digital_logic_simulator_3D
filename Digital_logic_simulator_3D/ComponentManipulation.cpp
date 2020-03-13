@@ -1,0 +1,152 @@
+#include "ComponentManipulation.h"
+
+ComponentManipulation::ComponentManipulation() {}
+
+void ComponentManipulation::init(DigitalLogic * _digitalLogicPointer){
+	digitalLogicPointer = _digitalLogicPointer;
+}
+
+void ComponentManipulation::placeComponent(glm::vec3 _cameraPosition, glm::vec3 _cameraDirection, componentType _componentTypeSelected){
+	glm::vec3 component = getSelectedComponent(_cameraPosition, _cameraDirection);
+	int face = getSide(component, _cameraPosition, _cameraDirection);
+	//FACES:
+	//top XZ: 0
+	//bottom XZ: 1
+	//back ZY: 2
+	//front ZY: 3
+	//back XY: 4
+	//front XY: 5
+	if (component == glm::vec3(NULL, NULL, NULL)) {
+		component = glm::vec3(10, 10, 10);
+	}
+	//if (component != glm::vec3(NULL, NULL, NULL)) {
+		switch (face) {
+		case 0:
+			digitalLogicPointer->addComponent(component.x, component.y + 1, component.z, _componentTypeSelected, positiveY);
+			break;
+		case 1:
+			digitalLogicPointer->addComponent(component.x, component.y - 1, component.z, _componentTypeSelected, negativeY);
+			break;
+		case 2:
+			digitalLogicPointer->addComponent(component.x + 1, component.y, component.z, _componentTypeSelected, positiveX);
+			break;
+		case 3:
+			digitalLogicPointer->addComponent(component.x - 1, component.y, component.z, _componentTypeSelected, negativeX);
+			break;
+		case 4:
+			digitalLogicPointer->addComponent(component.x, component.y, component.z + 1, _componentTypeSelected, positiveZ);
+			break;
+		case 5:
+			digitalLogicPointer->addComponent(component.x, component.y, component.z - 1, _componentTypeSelected, negativeZ);
+			break;
+		}
+	//}
+}
+
+glm::vec3 ComponentManipulation::getSelectedComponent(glm::vec3 _cameraPosition, glm::vec3 _cameraDirection){
+	glm::vec3 temp = _cameraPosition;
+	float radius = 150;
+	for (int i = 0; i < radius; i++) {
+		temp += glm::vec3(_cameraDirection.x / 25, _cameraDirection.y / 25, _cameraDirection.z / 25);
+		if (digitalLogicPointer->getComponent(floor(temp.x), floor(temp.y), floor(temp.z))) {
+			return glm::vec3(floor(temp.x), floor(temp.y), floor(temp.z));
+		}
+	}
+	return glm::vec3(NULL, NULL, NULL);
+}
+
+glm::vec3 ComponentManipulation::getLineFaceIntersect(glm::vec3 min, glm::vec3 max, glm::vec3 origin, glm::vec3 direction, int orientation) {
+	//orientation 1: XZ, 2: ZY, 3: XY
+	direction *= 100;
+	direction += origin;
+	glm::vec3 intersection = glm::vec3(1000000000, 1000000000, 1000000000);
+	switch (orientation) {
+	case 1:
+		intersection.y = min.y;
+		intersection.x = (min.y - origin.y) / (direction.y - origin.y)*(direction.x - origin.x) + origin.x;
+		intersection.z = (min.y - origin.y) / (direction.y - origin.y)*(direction.z - origin.z) + origin.z;
+		if (intersection.x <= max.x && intersection.x >= min.x && intersection.z <= max.z && intersection.z >= min.z) {
+			return intersection;
+		}
+		break;
+	case 2:
+		intersection.x = min.x;
+		intersection.y = (min.x - origin.x) / (direction.x - origin.x)*(direction.y - origin.y) + origin.y;
+		intersection.z = (min.x - origin.x) / (direction.x - origin.x)*(direction.z - origin.z) + origin.z;
+
+		if (intersection.y <= max.y && intersection.y >= min.y && intersection.z <= max.z && intersection.z >= min.z) {
+			return intersection;
+		}
+		break;
+	case 3:
+		intersection.z = min.z;
+		intersection.x = (min.z - origin.z) / (direction.z - origin.z)*(direction.x - origin.x) + origin.x;
+		intersection.y = (min.z - origin.z) / (direction.z - origin.z)*(direction.y - origin.y) + origin.y;
+		if (intersection.x <= max.x && intersection.x >= min.x && intersection.y <= max.y && intersection.y >= min.y) {
+			return intersection;
+		}
+		break;
+	default:
+		std::cout << "No valid orientation passed in" << std::endl;
+		return glm::vec3(NULL, NULL, NULL);
+		break;
+	}
+	return glm::vec3(NULL, NULL, NULL);
+}
+
+int ComponentManipulation::getSide(glm::vec3 _component, glm::vec3 _cameraPosition, glm::vec3 _cameraDirection){
+	std::vector<glm::vec3> intersections;
+	//top XZ
+	glm::vec3 min = glm::vec3(_component.x, _component.y + 1, _component.z);
+	glm::vec3 max = glm::vec3(_component.x + 1, _component.y + 1, _component.z + 1);
+	intersections.push_back(getLineFaceIntersect(min, max, _cameraPosition, _cameraDirection, 1));
+	//bottom XZ
+	min = glm::vec3(_component.x, _component.y, _component.z);
+	max = glm::vec3(_component.x + 1, _component.y, _component.z + 1);
+	intersections.push_back(getLineFaceIntersect(min, max, _cameraPosition, _cameraDirection, 1));
+	//back ZY
+	min = glm::vec3(_component.x + 1, _component.y, _component.z);
+	max = glm::vec3(_component.x + 1, _component.y + 1, _component.z + 1);
+	intersections.push_back(getLineFaceIntersect(min, max, _cameraPosition, _cameraDirection, 2));
+	//front ZY
+	min = glm::vec3(_component.x, _component.y, _component.z);
+	max = glm::vec3(_component.x, _component.y + 1, _component.z + 1);
+	intersections.push_back(getLineFaceIntersect(min, max, _cameraPosition, _cameraDirection, 2));
+	//back XY
+	min = glm::vec3(_component.x, _component.y, _component.z + 1);
+	max = glm::vec3(_component.x + 1, _component.y + 1, _component.z + 1);
+	intersections.push_back(getLineFaceIntersect(min, max, _cameraPosition, _cameraDirection, 3));
+	//front XY
+	min = glm::vec3(_component.x, _component.y, _component.z);
+	max = glm::vec3(_component.x + 1, _component.y + 1, _component.z);
+	intersections.push_back(getLineFaceIntersect(min, max, _cameraPosition, _cameraDirection, 3));
+
+	int smallestDistanceIndex = 0;
+	float smallestDistance = 1000000000;
+	for (int i = 0; i < intersections.size(); i++) {
+		if (intersections[i].x != NULL) {
+			float temp = get3DDistance(_cameraPosition, intersections[i]);
+			if (temp < smallestDistance && temp != NULL) {
+				smallestDistance = temp;
+				smallestDistanceIndex = i;
+			}
+		}
+	}
+	if (smallestDistance == 1000000000) {
+		return NULL;
+	}
+	return smallestDistanceIndex;
+	//top XZ: 0
+	//bottom XZ: 1
+	//back ZY: 2
+	//front ZY: 3
+	//back XY: 4
+	//front XY: 5
+}
+
+float ComponentManipulation::get3DDistance(glm::vec3 _p1, glm::vec3 _p2) {
+	if (_p1 == glm::vec3(NULL, NULL, NULL) || _p2 == glm::vec3(NULL, NULL, NULL)) {
+		return NULL;
+	}
+	return sqrt(pow((_p1.x - _p2.x), 2) + pow((_p1.y - _p2.y), 2) + pow((_p1.z - _p2.z), 2));
+}

@@ -34,6 +34,8 @@ struct Object {
 	glm::vec3 scale;
 	glm::vec3 position;
 	bool wireFrame = false;
+	bool visible = true;
+	bool relevant = true;
 };
 
 struct UniformBufferObject {
@@ -157,6 +159,8 @@ public:
 
 	void moveObject(int objectIndex, glm::vec3 position);
 
+	void removeObject(int objectIndex);
+
 	void scaleObject(int objectIndex, glm::vec3 scale);
 
 	void recalculateObjectMatrix(int objectIndex);
@@ -170,6 +174,8 @@ public:
 	void setFreeLook(bool value);
 
 	void setObjectsWireFrame(bool value);
+
+	void setObjectVisible(int objectIndex, bool visible);
 
 private:
 

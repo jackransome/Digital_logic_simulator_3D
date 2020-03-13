@@ -120,11 +120,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentManipulation.h" />
+    <ClInclude Include="DigitalLogic.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ComponentManipulation.cpp" />
+    <ClCompile Include="DigitalLogic.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Input.cpp" />

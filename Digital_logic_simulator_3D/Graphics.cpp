@@ -1212,11 +1212,17 @@ void Graphics::createIndexBuffer() {
 
 void Graphics::createStorageBuffer() {
 	std::vector<glm::mat4> storageBufferData;
+	int notDrawn = 0;
 	for (int i = 0; i < objects.size(); i++) {
-		storageBufferData.push_back(objects[i].transformData);
+		if (objects[i].visible) {
+			storageBufferData.push_back(objects[i].transformData);
+		}
+		else {
+			notDrawn++;
+		}
 	}
 
-	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) * objects.size();
+	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) *  (objects.size() - notDrawn);
 	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * MAX_OBJECTS;
 
 	VkBuffer stagingBuffer;
@@ -1240,6 +1246,12 @@ void Graphics::updateStorageBuffer() {
 
 	std::vector<glm::mat4> storageBufferData;
 	for (int i = 0; i < objects.size(); i++) {
+		if (!objects[i].visible) {
+			objects[i].transformData *= 0;
+		}
+		else if (objects[i].transformData == glm::mat4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)){
+			recalculateObjectMatrix(i);
+		}
 		storageBufferData.push_back(objects[i].transformData);
 	}
 
@@ -1848,11 +1860,28 @@ void Graphics::loadModel(const char * path, glm::vec4 colour, glm::vec3 scale)
 }
 void Graphics::loadModels()
 {
-	loadModel("models/testUV.obj", glm::vec4(0.9, 0.1, 0.1, 1), glm::vec3(0.2,0.2,0.2));
-	loadModel("models/test3.obj", glm::vec4(0.2, 0.4, 0.9, 1), glm::vec3(1));
-	loadModel("models/xyzOrigin.obj", glm::vec4(0.1, 0.9, 0.1, 1), glm::vec3(1));
-	loadModel("models/small_sphere.obj", glm::vec4(0.7, 0.9, 0.1, 1), glm::vec3(1));
-	loadModel("models/testUV.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1));
+	loadModel("models/testUV.obj", glm::vec4(0.9, 0.1, 0.1, 1), glm::vec3(0.2,0.2,0.2)); // : 0
+	loadModel("models/test3.obj", glm::vec4(0.2, 0.4, 0.9, 1), glm::vec3(1)); // : 1
+	loadModel("models/xyzOrigin.obj", glm::vec4(0.1, 0.9, 0.1, 1), glm::vec3(1)); // : 2
+	loadModel("models/small_sphere.obj", glm::vec4(0.7, 0.9, 0.1, 1), glm::vec3(1)); // : 3
+	loadModel("models/testUV.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // : 4
+
+	loadModel("models/box.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // : 5
+	loadModel("models/button_off.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // button off : 6
+	loadModel("models/button_on.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // button on : 7
+	loadModel("models/inverter.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // inverter off : 8
+	loadModel("models/inverter.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // inverter on : 9
+	loadModel("models/andGate.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); //andGate off : 10
+	loadModel("models/andGate.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); //andGate on : 11
+	loadModel("models/orGate.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // orGate off : 12
+	loadModel("models/orGate.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // orGate on : 13
+	loadModel("models/wire.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // wire off : 14
+	loadModel("models/wire.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // wire on : 15
+	loadModel("models/wire_center.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // wireCenter off : 16
+	loadModel("models/wire_center.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // wireCenter on : 17
+	loadModel("models/XorGate.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // XorGate off : 18
+	loadModel("models/XorGate.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // XorGate on : 19
+
 }
 
 void Graphics::loadObjects() {
@@ -1897,7 +1926,23 @@ GLFWwindow* Graphics::getWindowPointer() {
 }
 
 int Graphics::addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, bool wireFrame) {
-	if (objects.size() >= MAX_OBJECTS) { return NULL; }
+	if (objects.size() >= MAX_OBJECTS) {
+		int index = -1;
+		for (int i = 0; i < objects.size(); i++) {
+			if (!objects[i].relevant) {
+				objects[i].position = position;
+				objects[i].scale = scale;
+				objects[i].model = &models[modelIndex];
+				objects[i].wireFrame = wireFrame;
+				recalculateObjectMatrix(i);
+
+				return i;
+			}
+		}
+		//if reaches here, the vector is full and there are no irrelevant elements
+		std::cout << "Error, max objects reached" << std::endl;
+		return NULL;
+	}
 
 	objects.push_back(Object());
 	objects[objects.size() - 1].position = position;
@@ -1912,6 +1957,10 @@ int Graphics::addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, boo
 void Graphics::moveObject(int objectIndex, glm::vec3 position) {
 	objects[objectIndex].position = position;
 	recalculateObjectMatrix(objectIndex);
+}
+
+void Graphics::removeObject(int objectIndex){
+	objects[objectIndex].relevant = false;
 }
 
 void Graphics::scaleObject(int objectIndex, glm::vec3 scale) {
@@ -1959,6 +2008,17 @@ void Graphics::setObjectsWireFrame(bool value)
 	{
 		object.wireFrame = value;
 	}
+}
+
+void Graphics::setObjectVisible(int objectIndex, bool visible)
+{
+	if (objectIndex < objects.size()) {
+		objects[objectIndex].visible = visible;
+	}
+	else {
+		std::cout << "Error, object index out of range";
+	}
+	
 }
 
 void Graphics::clearStorageBuffer()

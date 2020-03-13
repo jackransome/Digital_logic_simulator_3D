@@ -2,9 +2,10 @@
 
 #include <windows.h>
 #include <chrono>
+#include <stdio.h>
 
-//for testing
-#include <thread>
+#include "DigitalLogic.h"
+#include "ComponentManipulation.h"
 
 using std::chrono::time_point_cast;
 using std::chrono::duration_cast;
@@ -29,6 +30,13 @@ int main()
 
 		glm::vec3 cameraPos = glm::vec3(0, 0, 0);
 
+		DigitalLogic digitalLogic;
+		ComponentManipulation componentManipulation;
+		componentManipulation.init(&digitalLogic);
+		digitalLogic.init();
+
+		globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 2);
+
 		while (!globals::gfx.shouldClose) {
 			auto newTime = time_point_cast<us>(Time::now());
 			auto frameTime = duration_cast<us>(newTime - currentTime).count();
@@ -40,9 +48,13 @@ int main()
 			{
 				globals::gfx.setCameraAngle(globals::input.cameraAngle);
 				globals::input.run();
-
+				digitalLogic.runLogic();
 				globals::gfx.setCameraPos(cameraPos);
-
+				glm::vec3 cameraDirection = glm::vec3(
+					cos(globals::input.cameraAngle.y) * sin(globals::input.cameraAngle.x),
+					sin(globals::input.cameraAngle.y),
+					cos(globals::input.cameraAngle.y) * cos(globals::input.cameraAngle.x)
+				);
 				//getting directions for forward and sideways based on the way the camera is pointed
 				glm::vec3 forward = glm::vec3(sin(globals::input.cameraAngle.x), 0, cos(globals::input.cameraAngle.x));
 				glm::vec3 right = glm::vec3(
@@ -80,6 +92,18 @@ int main()
 					int test = globals::gfx.addObject(glm::vec3(rand() % 30, rand() % 30, rand() % 30), glm::vec3(rand() % 15+2, rand() % 15+2, rand() % 15+2), 0);
 				}
 
+				if (globals::input.keys.keyCounts["g"] == 1)
+				{
+					componentManipulation.placeComponent(cameraPos, cameraDirection, wire);
+				}
+
+				if (globals::input.keys.keyCounts["h"] == 1)
+				{
+					componentManipulation.placeComponent(cameraPos, cameraDirection, inverter);
+				}
+				
+				printf("x: %f, y: %f, z: %f\n", cameraDirection.x, cameraDirection.y, cameraDirection.z);
+
 				if (globals::input.keys.keyCounts["leftCtrl"] == 1)
 				{
 					globals::gfx.setObjectsWireFrame(true);
@@ -88,10 +112,10 @@ int main()
 				{
 					globals::gfx.setObjectsWireFrame(false);
 				}
-
+				digitalLogic.runLogic();
 				accumulator -= globals::dt;
 			}
-
+			digitalLogic.updateModels();
 			globals::gfx.run();
 		}
 	}
