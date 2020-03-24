@@ -17,7 +17,9 @@ void ComponentManipulation::placeComponent(glm::vec3 _cameraPosition, glm::vec3 
 	//back XY: 4
 	//front XY: 5
 	if (component == glm::vec3(NULL, NULL, NULL)) {
-		component = glm::vec3(10, 10, 10);
+		component = glm::vec3(0, 0, 0);
+		//digitalLogicPointer->addComponent(component.x, component.y, component.z, _componentTypeSelected, positiveY);
+		//return;
 	}
 	//if (component != glm::vec3(NULL, NULL, NULL)) {
 		switch (face) {

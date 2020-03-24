@@ -1932,10 +1932,10 @@ int Graphics::addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, boo
 			if (!objects[i].relevant) {
 				objects[i].position = position;
 				objects[i].scale = scale;
+				objects[i].rotation = glm::vec3(0,0,0);
 				objects[i].model = &models[modelIndex];
 				objects[i].wireFrame = wireFrame;
 				recalculateObjectMatrix(i);
-
 				return i;
 			}
 		}
@@ -1954,8 +1954,44 @@ int Graphics::addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, boo
 	return objects.size() - 1;
 }
 
+int Graphics::addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, glm::vec3 rotation, bool wireFrame) {
+	if (objects.size() >= MAX_OBJECTS) {
+		int index = -1;
+		for (int i = 0; i < objects.size(); i++) {
+			if (!objects[i].relevant) {
+				objects[i].position = position;
+				objects[i].scale = scale;
+				objects[i].rotation = rotation;
+				objects[i].model = &models[modelIndex];
+				objects[i].wireFrame = wireFrame;
+				recalculateObjectMatrix(i);
+
+				return i;
+			}
+		}
+		//if reaches here, the vector is full and there are no irrelevant elements
+		std::cout << "Error, max objects reached" << std::endl;
+		return NULL;
+	}
+
+	objects.push_back(Object());
+	objects[objects.size() - 1].position = position;
+	objects[objects.size() - 1].scale = scale;
+	objects[objects.size() - 1].rotation = rotation;
+	objects[objects.size() - 1].model = &models[modelIndex];
+	objects[objects.size() - 1].wireFrame = wireFrame;
+	recalculateObjectMatrix(objects.size() - 1);
+
+	return objects.size() - 1;
+}
+
 void Graphics::moveObject(int objectIndex, glm::vec3 position) {
 	objects[objectIndex].position = position;
+	recalculateObjectMatrix(objectIndex);
+}
+
+void Graphics::rotateObject(int objectIndex, glm::vec3 rotation){
+	objects[objectIndex].rotation += rotation;
 	recalculateObjectMatrix(objectIndex);
 }
 
@@ -1970,8 +2006,41 @@ void Graphics::scaleObject(int objectIndex, glm::vec3 scale) {
 
 void Graphics::recalculateObjectMatrix(int objectIndex)
 {
-	objects[objectIndex].transformData = glm::translate(glm::mat4(1.0f), objects[objectIndex].position);
-	objects[objectIndex].transformData = glm::scale(objects[objectIndex].transformData, objects[objectIndex].scale);
+	//objects[objectIndex].transformData = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, -0.5, -0.5));
+	//objects[objectIndex].transformData = glm::rotate(objects[objectIndex].transformData, objects[objectIndex].rotation.x, glm::vec3(1, 0, 0));
+	//objects[objectIndex].transformData = glm::rotate(objects[objectIndex].transformData, objects[objectIndex].rotation.y, glm::vec3(0, 1, 0));
+	//objects[objectIndex].transformData = glm::rotate(objects[objectIndex].transformData, objects[objectIndex].rotation.z, glm::vec3(0, 0, 1));
+	//objects[objectIndex].transformData = glm::translate(objects[objectIndex].transformData, glm::vec3(0.5, 0.5, 0.5));
+
+	//initial transform:
+	glm::mat4 transform1 = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, -0.5, -0.5));
+	//x axis rotation:
+	glm::mat4 xRotation = glm::inverse(glm::rotate(glm::mat4(1.0f), -objects[objectIndex].rotation.x, glm::vec3(1, 0, 0)));
+	glm::mat4 yRotation = glm::inverse(glm::rotate(glm::mat4(1.0f), -objects[objectIndex].rotation.y, glm::vec3(0, 1, 0)));
+	glm::mat4 zRotation = glm::inverse(glm::rotate(glm::mat4(1.0f), -objects[objectIndex].rotation.z, glm::vec3(0, 0, 1)));
+	//reset tranform:
+	glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5));
+	//position tranform:
+	glm::mat4 transform3 = glm::translate(glm::mat4(1.0f), objects[objectIndex].position);
+
+	objects[objectIndex].transformData = transform3 * transform2 * zRotation * yRotation * xRotation * transform1;
+
+	/*objects[objectIndex].transformData = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, -0.5, -0.5));
+
+	glm::vec4 test = objects[objectIndex].transformData * glm::vec4(1, 1, 1, 1);
+	
+	objects[objectIndex].transformData = glm::inverse(glm::rotate(glm::mat4(1.0f), -float(3.1515/2), glm::vec3(1, 0, 0)));
+	
+	//test = test * objects[objectIndex].transformData;
+	test = objects[objectIndex].transformData * test;
+
+	objects[objectIndex].transformData = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5));
+	
+	test = objects[objectIndex].transformData * test;
+
+	test = (glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5)) * glm::inverse(glm::rotate(glm::mat4(1.0f), -float(3.1515 / 2), glm::vec3(1, 0, 0))) * glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, -0.5, -0.5))) * glm::vec4(1, 1, 1, 1);
+	*/
+	//objects[objectIndex].transformData = glm::scale(objects[objectIndex].transformData, objects[objectIndex].scale);
 }
 
 //Object* Graphics::addObject(float x, float y, float z, int modelIndex) {

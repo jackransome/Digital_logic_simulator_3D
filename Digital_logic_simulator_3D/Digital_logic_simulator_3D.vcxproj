@@ -128,6 +128,7 @@
     <ClInclude Include="Input.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManipulation.cpp" />
     <ClCompile Include="DigitalLogic.cpp" />
     <ClCompile Include="Globals.cpp" />

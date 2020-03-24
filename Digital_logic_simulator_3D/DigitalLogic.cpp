@@ -3,7 +3,7 @@
 DigitalLogic::DigitalLogic() {}
 //initialises the DigitalLogic object
 void DigitalLogic::init() {
-	addComponent(((double)rand() / (RAND_MAX)) * 120, ((double)rand() / (RAND_MAX)) * 120, ((double)rand() / (RAND_MAX)) * 120, inverter);
+	//addComponent(((double)rand() / (RAND_MAX)) * 120, ((double)rand() / (RAND_MAX)) * 120, ((double)rand() / (RAND_MAX)) * 120, inverter);
 }
 //adds a block to the vector with direction
 void DigitalLogic::addComponent(int x, int y, int z, componentType type) {
@@ -18,8 +18,8 @@ void DigitalLogic::addComponent(int x, int y, int z, componentType type, compone
 	if (!doesComponentExist(x, y, z)) {
 		components.push_back(new Component(x, y, z, type, direction));
 		//DIRECTION HERE \/\/\/\/
-		components[components.size() - 1]->offGraphicsObjectIndex = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, false));
-		components[components.size() - 1]->onGraphicsObjectIndex = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, true));
+		components[components.size() - 1]->offGraphicsObjectIndex = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, false), glm::vec3(0.1, 0, 0));
+		components[components.size() - 1]->onGraphicsObjectIndex = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, true), glm::vec3(1, 0, 0));
 	}
 }
 //gets the seize of the vector
@@ -58,6 +58,7 @@ int DigitalLogic::getComponent(int x, int y, int z) {
 
 void DigitalLogic::updateModels(){
 	for (int i = 0; i < components.size(); i++) {
+		globals::gfx.rotateObject(components[i]->offGraphicsObjectIndex, glm::vec3(0.01, 0.005, 0.001));
 		if (components[i]->state) {
 			globals::gfx.setObjectVisible(components[i]->offGraphicsObjectIndex, false);
 			globals::gfx.setObjectVisible(components[i]->onGraphicsObjectIndex, true);

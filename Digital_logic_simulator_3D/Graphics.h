@@ -33,6 +33,7 @@ struct Object {
 	glm::mat4 transformData;
 	glm::vec3 scale;
 	glm::vec3 position;
+	glm::vec3 rotation;
 	bool wireFrame = false;
 	bool visible = true;
 	bool relevant = true;
@@ -157,7 +158,11 @@ public:
 
 	int addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, bool wireFrame = false);
 
+	int addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, glm::vec3 rotation, bool wireFrame = false);
+
 	void moveObject(int objectIndex, glm::vec3 position);
+
+	void rotateObject(int objectIndex, glm::vec3 rotation);
 
 	void removeObject(int objectIndex);
 

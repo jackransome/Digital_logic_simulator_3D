@@ -102,7 +102,7 @@ int main()
 					componentManipulation.placeComponent(cameraPos, cameraDirection, inverter);
 				}
 				
-				printf("x: %f, y: %f, z: %f\n", cameraDirection.x, cameraDirection.y, cameraDirection.z);
+				printf("x: %f, y: %f, z: %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
 
 				if (globals::input.keys.keyCounts["leftCtrl"] == 1)
 				{
