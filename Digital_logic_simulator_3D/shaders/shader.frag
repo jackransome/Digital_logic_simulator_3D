@@ -22,7 +22,7 @@ void main() {
 	vec3 objectColor = vec3(fragColor.x, fragColor.y, fragColor.z);//vec3(0.2,0.4,1);
 
 	// ambient
-    float ambientStrength = 0.6;
+    float ambientStrength = 0.7;
     vec3 ambient = ambientStrength * lightColor;
   	
     // diffuse 

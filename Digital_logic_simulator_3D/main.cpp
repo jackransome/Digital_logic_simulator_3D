@@ -36,6 +36,7 @@ int main()
 
 		componentType componentTypeSelected = wire;
 
+		//the green origin model
 		globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 2);
 
 		while (!globals::gfx.shouldClose) {
@@ -130,9 +131,9 @@ int main()
 				{
 					globals::gfx.setObjectsWireFrame(false);
 				}
-				digitalLogic.runLogic();
 				accumulator -= globals::dt;
 			}
+			digitalLogic.runLogic();
 			digitalLogic.updateModels();
 			globals::gfx.run();
 		}
