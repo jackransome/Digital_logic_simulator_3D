@@ -188,7 +188,7 @@ private:
 
 	std::vector<Object> objects;
 
-	const int MAX_OBJECTS = 500;
+	const int MAX_OBJECTS = 10000;
 
 	int sizeOfAllModels = 0;
 

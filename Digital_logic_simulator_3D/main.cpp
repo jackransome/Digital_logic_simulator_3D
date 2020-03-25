@@ -4,7 +4,6 @@
 #include <chrono>
 #include <stdio.h>
 
-#include "DigitalLogic.h"
 #include "ComponentManipulation.h"
 
 using std::chrono::time_point_cast;
@@ -34,6 +33,8 @@ int main()
 		ComponentManipulation componentManipulation;
 		componentManipulation.init(&digitalLogic);
 		digitalLogic.init();
+
+		componentType componentTypeSelected = wire;
 
 		globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 2);
 
@@ -87,22 +88,39 @@ int main()
 					cameraPos.y += 0.1;
 				}
 
-				if (globals::input.keys.keyCounts["f"])
-				{
-					int test = globals::gfx.addObject(glm::vec3(rand() % 30, rand() % 30, rand() % 30), glm::vec3(rand() % 15+2, rand() % 15+2, rand() % 15+2), 0);
+				if (globals::input.keys.keyCounts["n1"]) {
+					componentTypeSelected = wire;
 				}
 
-				if (globals::input.keys.keyCounts["g"] == 1)
-				{
-					componentManipulation.placeComponent(cameraPos, cameraDirection, wire);
+				if (globals::input.keys.keyCounts["n2"]) {
+					componentTypeSelected = inverter;
 				}
 
-				if (globals::input.keys.keyCounts["h"] == 1)
-				{
-					componentManipulation.placeComponent(cameraPos, cameraDirection, inverter);
+				if (globals::input.keys.keyCounts["n3"]) {
+					componentTypeSelected = andGate;
+				}
+
+				if (globals::input.keys.keyCounts["n4"]) {
+					componentTypeSelected = orGate;
+				}
+
+				if (globals::input.keys.keyCounts["n5"]) {
+					componentTypeSelected = xorGate;
+				}
+
+				if (globals::input.keys.keyCounts["f"]) {
+					digitalLogic.addComponent(cameraPos.x, cameraPos.y, cameraPos.z, wire);
+				}
+
+				if (globals::input.keys.keyCounts["mouseLeft"] == 1) {
+					componentManipulation.placeComponent(cameraPos, cameraDirection, componentTypeSelected);
+				}
+
+				if (globals::input.keys.keyCounts["mouseRight"] == 1) {
+					componentManipulation.deleteComponent(cameraPos, cameraDirection);
 				}
 				
-				printf("x: %f, y: %f, z: %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
+				//printf("x: %f, y: %f, z: %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
 
 				if (globals::input.keys.keyCounts["leftCtrl"] == 1)
 				{

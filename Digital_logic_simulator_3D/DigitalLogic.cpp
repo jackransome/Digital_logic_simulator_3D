@@ -7,19 +7,67 @@ void DigitalLogic::init() {
 }
 //adds a block to the vector with direction
 void DigitalLogic::addComponent(int x, int y, int z, componentType type) {
-	if (!doesComponentExist(x, y, z)) {
-		components.push_back(new Component(x, y, z, type, positiveY));
-		components[components.size() - 1]->offGraphicsObjectIndex = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, false));
-		components[components.size() - 1]->onGraphicsObjectIndex = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, true));
-	}
+	addComponent(x, y, z, type, positiveX);
 }
 //adds a block to the vector
 void DigitalLogic::addComponent(int x, int y, int z, componentType type, componentDirection direction) {
 	if (!doesComponentExist(x, y, z)) {
 		components.push_back(new Component(x, y, z, type, direction));
 		//DIRECTION HERE \/\/\/\/
-		components[components.size() - 1]->offGraphicsObjectIndex = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, false), glm::vec3(0.1, 0, 0));
-		components[components.size() - 1]->onGraphicsObjectIndex = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, true), glm::vec3(1, 0, 0));
+		glm::vec3 rotation;
+		switch (direction) {
+		case positiveX:
+			rotation = glm::vec3(0, 3.1415, 0);
+			break;
+		case negativeX:
+			rotation = glm::vec3(0, 0, 0);
+			break;
+		case positiveY:
+			rotation = glm::vec3(0, 0, -3.1415/2);
+			break;
+		case negativeY:
+			rotation = glm::vec3(0, 0, 3.1415 / 2);
+			break;
+		case positiveZ:
+			rotation = glm::vec3(0, 3.1415 / 2, 0);
+			break;
+		case negativeZ:
+			rotation = glm::vec3(0, -3.1415 / 2, 0);
+			break;
+		}
+	if (type == wire) {
+			//center:
+			components[components.size() - 1]->offGraphicsObjectIndex = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), 16, rotation);
+			components[components.size() - 1]->onGraphicsObjectIndex = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), 17, rotation);
+			//PX
+			rotation = glm::vec3(0, 3.1415, 0);
+			components[components.size() - 1]->wireObjects[0] = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, false), rotation);
+			components[components.size() - 1]->wireObjects[1] = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, true), rotation);
+			//NX
+			rotation = glm::vec3(0, 0, 0);
+			components[components.size() - 1]->wireObjects[2] = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, false), rotation);
+			components[components.size() - 1]->wireObjects[3] = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, true), rotation);
+			//PY
+			rotation = glm::vec3(0, 0, -3.1415 / 2);
+			components[components.size() - 1]->wireObjects[4] = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, false), rotation);
+			components[components.size() - 1]->wireObjects[5] = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, true), rotation);
+			//NY
+			rotation = glm::vec3(0, 0, 3.1415 / 2);
+			components[components.size() - 1]->wireObjects[6] = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, false), rotation);
+			components[components.size() - 1]->wireObjects[7] = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, true), rotation);
+			//PZ
+			rotation = glm::vec3(0, 3.1415 / 2, 0);
+			components[components.size() - 1]->wireObjects[8] = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, false), rotation);
+			components[components.size() - 1]->wireObjects[9] = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, true), rotation);
+			//NZ
+			rotation = glm::vec3(0, -3.1415 / 2, 0);
+			components[components.size() - 1]->wireObjects[10] = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, false), rotation);
+			components[components.size() - 1]->wireObjects[11] = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, true), rotation);
+		}
+		else {
+			components[components.size() - 1]->offGraphicsObjectIndex = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, false), rotation);
+			components[components.size() - 1]->onGraphicsObjectIndex = globals::gfx.addObject(components[components.size() - 1]->position, glm::vec3(1, 1, 1), getModelIndex(type, true), rotation);
+		}
 	}
 }
 //gets the seize of the vector
@@ -32,6 +80,11 @@ bool DigitalLogic::removeComponent(int x, int y, int z) {
 		int index = getComponent(x, y, z);
 		globals::gfx.removeObject(components[index]->offGraphicsObjectIndex);
 		globals::gfx.removeObject(components[index]->onGraphicsObjectIndex);
+		if (components[index]->type == wire) {
+			for (int i = 0; i < 12; i++) {
+				globals::gfx.removeObject(components[index]->wireObjects[i]);
+			}
+		}
 		components.erase(components.begin() + index);
 		return true;
 	}
@@ -53,19 +106,83 @@ int DigitalLogic::getComponent(int x, int y, int z) {
 			return i;
 		}
 	}
-	return NULL;
+	return -1;
 }
 
 void DigitalLogic::updateModels(){
+	bool onValue;
+	bool offValue;
 	for (int i = 0; i < components.size(); i++) {
-		globals::gfx.rotateObject(components[i]->offGraphicsObjectIndex, glm::vec3(0.01, 0.005, 0.001));
 		if (components[i]->state) {
-			globals::gfx.setObjectVisible(components[i]->offGraphicsObjectIndex, false);
-			globals::gfx.setObjectVisible(components[i]->onGraphicsObjectIndex, true);
+			offValue = false;
+			onValue = true;
 		}
 		else {
-			globals::gfx.setObjectVisible(components[i]->offGraphicsObjectIndex, true);
-			globals::gfx.setObjectVisible(components[i]->onGraphicsObjectIndex, false);
+			offValue = true;
+			onValue = false;
+		}
+		if (components[i]->type == wire) {
+			int componentsConnected = 0;
+			if (getComponent(components[i]->position.x - 1, components[i]->position.y, components[i]->position.z) != -1) {
+				globals::gfx.setObjectVisible(components[i]->wireObjects[0], offValue);
+				globals::gfx.setObjectVisible(components[i]->wireObjects[1], onValue);
+				componentsConnected++;
+			} else {
+				globals::gfx.setObjectVisible(components[i]->wireObjects[0], false);
+				globals::gfx.setObjectVisible(components[i]->wireObjects[1], false);
+			}
+			if (getComponent(components[i]->position.x + 1, components[i]->position.y, components[i]->position.z) != -1) {
+				globals::gfx.setObjectVisible(components[i]->wireObjects[2], offValue);
+				globals::gfx.setObjectVisible(components[i]->wireObjects[3], onValue);
+				componentsConnected++;
+			} else {
+				globals::gfx.setObjectVisible(components[i]->wireObjects[2], false);
+				globals::gfx.setObjectVisible(components[i]->wireObjects[3], false);
+			}
+			if (getComponent(components[i]->position.x, components[i]->position.y - 1, components[i]->position.z) != -1) {
+				globals::gfx.setObjectVisible(components[i]->wireObjects[4], offValue);
+				globals::gfx.setObjectVisible(components[i]->wireObjects[5], onValue);
+				componentsConnected++;
+			} else {
+				globals::gfx.setObjectVisible(components[i]->wireObjects[4], false);
+				globals::gfx.setObjectVisible(components[i]->wireObjects[5], false);
+			}
+			if (getComponent(components[i]->position.x, components[i]->position.y + 1, components[i]->position.z) != -1) {
+				globals::gfx.setObjectVisible(components[i]->wireObjects[6], offValue);
+				globals::gfx.setObjectVisible(components[i]->wireObjects[7], onValue);
+				componentsConnected++;
+			} else {
+				globals::gfx.setObjectVisible(components[i]->wireObjects[6], false);
+				globals::gfx.setObjectVisible(components[i]->wireObjects[7], false);
+			}
+			if (getComponent(components[i]->position.x, components[i]->position.y, components[i]->position.z - 1) != -1) {
+				globals::gfx.setObjectVisible(components[i]->wireObjects[8], offValue);
+				globals::gfx.setObjectVisible(components[i]->wireObjects[9], onValue);
+				componentsConnected++;
+			} else {
+				globals::gfx.setObjectVisible(components[i]->wireObjects[8], false);
+				globals::gfx.setObjectVisible(components[i]->wireObjects[9], false);
+			}
+			if (getComponent(components[i]->position.x, components[i]->position.y, components[i]->position.z + 1) != -1) {
+				globals::gfx.setObjectVisible(components[i]->wireObjects[10], offValue);
+				globals::gfx.setObjectVisible(components[i]->wireObjects[11], onValue);
+				componentsConnected++;
+			} else {
+				globals::gfx.setObjectVisible(components[i]->wireObjects[10], false);
+				globals::gfx.setObjectVisible(components[i]->wireObjects[11], false);
+			}
+			if (componentsConnected == 0) {
+				globals::gfx.setObjectVisible(components[i]->offGraphicsObjectIndex, true);
+				globals::gfx.setObjectVisible(components[i]->onGraphicsObjectIndex, true);
+			}
+			else {
+				globals::gfx.setObjectVisible(components[i]->offGraphicsObjectIndex, false);
+				globals::gfx.setObjectVisible(components[i]->onGraphicsObjectIndex, false);
+			}
+		}
+		else {
+			globals::gfx.setObjectVisible(components[i]->offGraphicsObjectIndex, offValue);
+			globals::gfx.setObjectVisible(components[i]->onGraphicsObjectIndex, onValue);
 		}
 	}
 }

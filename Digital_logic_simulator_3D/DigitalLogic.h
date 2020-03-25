@@ -9,13 +9,14 @@ public:
 	void init();
 	void addComponent(int x, int y, int z, componentType type);
 	void addComponent(int x, int y, int z, componentType type, componentDirection direction);
+	bool removeComponent(int x, int y, int z);
 	int getVectorSize();
 	int getComponent(int x, int y, int z);
 	void updateModels();
 	void runLogic();
 
 private:
-	bool removeComponent(int x, int y, int z);
+	
 	bool doesComponentExist(int x, int y, int z);
 	
 	void checkSurroundingComponents(glm::vec3 block);

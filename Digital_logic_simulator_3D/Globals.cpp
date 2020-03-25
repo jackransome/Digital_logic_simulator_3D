@@ -14,10 +14,15 @@ namespace globals
 		globals::input.key_callback(key, scancode, action, mods);
 	}
 
+	void mouse_button_callback(GLFWwindow* window, int key, int action, int mods) {
+		globals::input.mouse_button_callback(key, action, mods);
+	}
+
 	void globalInit()
 	{
 		gfx.init();
 		input.init(globals::gfx.getWindowPointer());
 		glfwSetKeyCallback(globals::gfx.getWindowPointer(), key_callback);
+		glfwSetMouseButtonCallback(globals::gfx.getWindowPointer(), mouse_button_callback);
 	}
 }

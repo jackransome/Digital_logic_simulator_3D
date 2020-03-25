@@ -1214,15 +1214,16 @@ void Graphics::createStorageBuffer() {
 	std::vector<glm::mat4> storageBufferData;
 	int notDrawn = 0;
 	for (int i = 0; i < objects.size(); i++) {
-		if (objects[i].visible) {
-			storageBufferData.push_back(objects[i].transformData);
+		if (!objects[i].visible && objects[i].relevant) {
+			objects[i].transformData *= 0;
 		}
-		else {
-			notDrawn++;
+		else if (objects[i].transformData == glm::mat4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)) {
+			recalculateObjectMatrix(i);
 		}
+		storageBufferData.push_back(objects[i].transformData);
 	}
 
-	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) *  (objects.size() - notDrawn);
+	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) *  objects.size();
 	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * MAX_OBJECTS;
 
 	VkBuffer stagingBuffer;
@@ -1246,10 +1247,10 @@ void Graphics::updateStorageBuffer() {
 
 	std::vector<glm::mat4> storageBufferData;
 	for (int i = 0; i < objects.size(); i++) {
-		if (!objects[i].visible) {
+		if (!objects[i].visible || !objects[i].relevant) {
 			objects[i].transformData *= 0;
 		}
-		else if (objects[i].transformData == glm::mat4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)){
+		else if (objects[i].relevant && objects[i].transformData == glm::mat4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)){
 			recalculateObjectMatrix(i);
 		}
 		storageBufferData.push_back(objects[i].transformData);
@@ -1964,6 +1965,7 @@ int Graphics::addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, glm
 				objects[i].rotation = rotation;
 				objects[i].model = &models[modelIndex];
 				objects[i].wireFrame = wireFrame;
+				objects[i].relevant = true;
 				recalculateObjectMatrix(i);
 
 				return i;
@@ -2085,7 +2087,7 @@ void Graphics::setObjectVisible(int objectIndex, bool visible)
 		objects[objectIndex].visible = visible;
 	}
 	else {
-		std::cout << "Error, object index out of range";
+		std::cout << "Error: object index out of range\n";
 	}
 	
 }
