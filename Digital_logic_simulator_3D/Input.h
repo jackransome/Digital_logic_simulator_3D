@@ -106,6 +106,7 @@ public:
 	std::string inputString = "";
 	KeyCounts keys;
 	bool stringInputEnabled = true;
+	bool inMenu = false;
 	bool EXIT = false;
 	void run();
 	double xpos, ypos;

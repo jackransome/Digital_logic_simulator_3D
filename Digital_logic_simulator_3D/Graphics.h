@@ -167,6 +167,8 @@ public:
 
 	void quickDraw(glm::vec3 position, int modelIndex, bool wireFrame = false);
 
+	void quickDrawPixelCoordinates(glm::vec3 position, int modelIndex, bool wireFrame = false);
+
 	int addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, bool wireFrame = false);
 
 	int addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, glm::vec3 rotation, bool wireFrame = false);

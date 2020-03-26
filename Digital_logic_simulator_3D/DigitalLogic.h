@@ -10,15 +10,17 @@ public:
 	void addComponent(int x, int y, int z, componentType type);
 	void addComponent(int x, int y, int z, componentType type, componentDirection direction);
 	bool removeComponent(int x, int y, int z);
+	bool removeComponent(int _index);
 	int getVectorSize();
 	int getComponent(int x, int y, int z);
 	void updateModels();
 	void runLogic();
+	void clearComponents();
+	std::vector<Component*>* getComponentsPointer();
 
 private:
 	
 	bool doesComponentExist(int x, int y, int z);
-	
 	void checkSurroundingComponents(glm::vec3 block);
 	void getInput(int blockIndex, glm::vec3* input);
 	void getOutput(int blockIndex, glm::vec3* output);

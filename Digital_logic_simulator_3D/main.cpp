@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "ComponentManipulation.h"
+#include "GUI.h"
 
 using std::chrono::time_point_cast;
 using std::chrono::duration_cast;
@@ -30,6 +31,9 @@ int main()
 		glm::vec3 cameraPos = glm::vec3(0, 0, 0);
 
 		DigitalLogic digitalLogic;
+		GUI gui;
+		gui.init(&digitalLogic);
+		gui.loadMainMenu();
 		ComponentManipulation componentManipulation;
 		componentManipulation.init(&digitalLogic);
 		digitalLogic.init();
@@ -39,7 +43,7 @@ int main()
 		//the green origin model
 		globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 2);
 
-		while (!globals::gfx.shouldClose) {
+		while (!globals::gfx.shouldClose && !gui.EXIT) {
 			auto newTime = time_point_cast<us>(Time::now());
 			auto frameTime = duration_cast<us>(newTime - currentTime).count();
 			currentTime = newTime;
@@ -114,6 +118,9 @@ int main()
 				}
 
 				if (globals::input.keys.keyCounts["mouseLeft"] == 1) {
+					if (globals::input.inMenu) {
+						gui.updateButtons(globals::input.mousePosInWindow);
+					}
 					componentManipulation.placeComponent(cameraPos, cameraDirection, componentTypeSelected);
 				}
 
@@ -121,7 +128,7 @@ int main()
 					componentManipulation.deleteComponent(cameraPos, cameraDirection);
 				}
 				
-				//printf("x: %f, y: %f, z: %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
+				printf("x: %f, y: %f\n", globals::input.mousePosInWindow.x, globals::input.mousePosInWindow.y);
 
 				if (globals::input.keys.keyCounts["leftCtrl"] == 1)
 				{
@@ -131,9 +138,25 @@ int main()
 				{
 					globals::gfx.setObjectsWireFrame(false);
 				}
+
+				if (globals::input.keys.keyCounts["escape"] == 1) {
+					if (globals::input.inMenu) {
+						globals::input.inMenu = false;
+					} else{
+						globals::input.inMenu = true;
+						globals::input.clearInputString();
+					}
+				}
+				if (globals::input.inMenu) {
+					gui.updateTextBox();
+				}
 				accumulator -= globals::dt;
 			}
-			globals::gfx.drawString("test string", 0, -0.1);
+			if (globals::input.inMenu) {
+				gui.drawGUI();
+			}
+			//globals::gfx.quickDrawPixelCoordinates(glm::vec3(0, 0, 0), 92);
+			//globals::gfx.drawString("012345 test string - . _", globals::input.mousePosInWindow.x, globals::input.mousePosInWindow.y);
 			digitalLogic.runLogic();
 			digitalLogic.updateModels();
 			globals::gfx.run();

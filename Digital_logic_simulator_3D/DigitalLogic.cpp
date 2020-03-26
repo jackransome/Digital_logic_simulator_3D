@@ -90,6 +90,21 @@ bool DigitalLogic::removeComponent(int x, int y, int z) {
 	}
 	return false;
 }
+bool DigitalLogic::removeComponent(int _index)
+{
+	if (_index >= components.size()) {
+		return false;
+	}
+	globals::gfx.removeObject(components[_index]->offGraphicsObjectIndex);
+	globals::gfx.removeObject(components[_index]->onGraphicsObjectIndex);
+	if (components[_index]->type == wire) {
+		for (int i = 0; i < 12; i++) {
+			globals::gfx.removeObject(components[_index]->wireObjects[i]);
+		}
+	}
+	components.erase(components.begin() + _index);
+	return true;
+}
 //checks if a block of a particular position exists in the vector
 bool DigitalLogic::doesComponentExist(int x, int y, int z) {
 	for (int i = 0; i < components.size(); i++) {
@@ -435,4 +450,14 @@ void DigitalLogic::runLogic()
 			}
 		}
 	}
+}
+
+void DigitalLogic::clearComponents(){
+	for (int i = 0; i < components.size(); i++) {
+		removeComponent(i);
+	}
+}
+
+std::vector<Component*>* DigitalLogic::getComponentsPointer() {
+	return &components;
 }

@@ -123,21 +123,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="Buttons.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManipulation.h" />
     <ClInclude Include="DigitalLogic.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="GUI.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="loadAndSaveWorkSpace.h" />
+    <ClInclude Include="Textbox.h" />
+    <ClInclude Include="tinyxml2.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManipulation.cpp" />
     <ClCompile Include="DigitalLogic.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="loadAndSaveWorkSpace.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader.frag" />

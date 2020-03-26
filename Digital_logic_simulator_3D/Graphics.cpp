@@ -2014,7 +2014,7 @@ GLFWwindow* Graphics::getWindowPointer() {
 
 void Graphics::drawString(std::string string, float x, float y){
 	for (int i = 0; i < string.size(); i++) {
-		drawCharacter(string[i], x + i * 40, y);
+		drawCharacter(string[i], x + i * 20, y);
 	}
 }
 
@@ -2028,13 +2028,17 @@ void Graphics::drawCharacter(char character, float x, float y) {
 	else if (character >= 65 && character <= 90) {
 		characterNumber = character - 65 + 26;
 	}
+	//for uppercase:
+	else if (character >= 48 && character <= 57) {
+		characterNumber = character - 48 + 52;
+	}
 	//for - _ and .:
-	else if (character == 45) characterNumber = 52;
-	else if (character == 95) characterNumber = 53;
-	else if (character == 46) characterNumber = 54;
+	else if (character == '-') characterNumber = 62;
+	else if (character == '_') characterNumber = 63;
+	else if (character == '.') characterNumber = 64;
 	else return;
 	//coordinates x and y as parameters end up being pixel values instead of 1,1 being one corner of the screen and -1,-1 being the other
-	quickDraw(glm::vec3(x/swapChainExtent.width, y / swapChainExtent.height, 0), 25 + characterNumber);
+	quickDrawPixelCoordinates(glm::vec3(x, y, 0), 25 + characterNumber);
 }
 
 void Graphics::quickDraw(glm::vec3 position, int modelIndex, bool wireFrame){
@@ -2047,6 +2051,21 @@ void Graphics::quickDraw(glm::vec3 position, int modelIndex, bool wireFrame){
 		std::cout << "Error, max quickdraws reached" << std::endl;
 	}
 }
+
+void Graphics::quickDrawPixelCoordinates(glm::vec3 position, int modelIndex, bool wireFrame) {
+	position.x /= (swapChainExtent.width/2);
+	position.y /= (swapChainExtent.height/2);
+	if (quickDraws.size() < MAX_QUICKDRAWS) {
+		quickDraws.push_back(QuickDraw());
+		quickDraws[quickDraws.size() - 1].model = &models[modelIndex];
+		quickDraws[quickDraws.size() - 1].position = position;
+		quickDraws[quickDraws.size() - 1].wireFrame = wireFrame;
+	}
+	else {
+		std::cout << "Error, max quickdraws reached" << std::endl;
+	}
+}
+
 
 int Graphics::addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, bool wireFrame) {
 	if (objects.size() >= MAX_OBJECTS) {
