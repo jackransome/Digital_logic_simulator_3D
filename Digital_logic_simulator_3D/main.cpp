@@ -38,12 +38,6 @@ int main()
 
 		//the green origin model
 		globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 2);
-		
-		for (int i = 25; i < 90; i++) {
-			globals::gfx.addObject(glm::vec3(-1 + i*0.03, 0, 0), glm::vec3(1, 1, 1), i);
-		}
-
-		//globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 97);
 
 		while (!globals::gfx.shouldClose) {
 			auto newTime = time_point_cast<us>(Time::now());
@@ -139,7 +133,7 @@ int main()
 				}
 				accumulator -= globals::dt;
 			}
-			globals::gfx.quickDraw(glm::vec3(0, 0, 0), 97);
+			globals::gfx.drawString("test string", 0, -0.1);
 			digitalLogic.runLogic();
 			digitalLogic.updateModels();
 			globals::gfx.run();

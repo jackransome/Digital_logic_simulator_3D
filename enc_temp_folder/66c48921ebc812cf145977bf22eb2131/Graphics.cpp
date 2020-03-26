@@ -2033,7 +2033,6 @@ void Graphics::drawCharacter(char character, float x, float y) {
 	else if (character == 95) characterNumber = 53;
 	else if (character == 46) characterNumber = 54;
 	else return;
-	//coordinates x and y as parameters end up being pixel values instead of 1,1 being one corner of the screen and -1,-1 being the other
 	quickDraw(glm::vec3(x/swapChainExtent.width, y / swapChainExtent.height, 0), 25 + characterNumber);
 }
 

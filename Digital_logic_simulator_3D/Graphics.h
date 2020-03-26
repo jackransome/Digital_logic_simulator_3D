@@ -161,6 +161,10 @@ public:
 
 	GLFWwindow* getWindowPointer();
 
+	void drawString(std::string string, float x, float y);
+
+	void drawCharacter(char character, float x, float y);
+
 	void quickDraw(glm::vec3 position, int modelIndex, bool wireFrame = false);
 
 	int addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, bool wireFrame = false);
