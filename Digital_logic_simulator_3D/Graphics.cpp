@@ -46,6 +46,7 @@ void Graphics::initVulkan() {
 	createTextureImageView();
 	createTextureSampler();
 	loadModels();
+	loadFlatImageModels();
 	loadObjects();
 	createVertexBuffer();
 	createIndexBuffer();
@@ -1154,6 +1155,8 @@ int Graphics::loadOBJFile(std::string path, glm::vec4 colour, glm::vec3 scale) {
 				attrib.texcoords[2 * index.texcoord_index + 0],
 				1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
 			};
+			//SET TO -100 -100 AS TEXTURES ARE ONLY FOR MENU ELEMENTS CURRENTLY
+			vertex.texCoord = glm::vec2(-100, -100);
 
 			vertex.color = colour;// {1.0f, 1.0f, 1.0f, 1};
 
@@ -1222,8 +1225,13 @@ void Graphics::createStorageBuffer() {
 		}
 		storageBufferData.push_back(objects[i].transformData);
 	}
+	for (int i = 0; i < quickDraws.size(); i++) {
+		calculateQuickDrawMatrix(i);
+		storageBufferData.push_back(quickDraws[i].transformData);
+	}
 
-	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) *  objects.size();
+
+	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) *  (objects.size() + quickDraws.size());
 	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * MAX_OBJECTS;
 
 	VkBuffer stagingBuffer;
@@ -1255,8 +1263,13 @@ void Graphics::updateStorageBuffer() {
 		}
 		storageBufferData.push_back(objects[i].transformData);
 	}
+	for (int i = 0; i < quickDraws.size(); i++) {
+		calculateQuickDrawMatrix(i);
+		storageBufferData.push_back(quickDraws[i].transformData);
+	}
 
-	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) *  objects.size();
+
+	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) *  (objects.size() + quickDraws.size());
 	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * MAX_OBJECTS;
 
 	VkBuffer stagingBuffer;
@@ -1502,12 +1515,23 @@ void Graphics::createCommandBuffers() {
 			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(objects[j].model->size), 1, static_cast<uint32_t>(objects[j].model->offset), 0, 0);
 		}
 
+		// drawing all the quickDraw calls (eg, as menu elements are not actually objects, instead we draw them using quickDraw, this avoids the object overhead and persistance issues [especially problematic for text])
+		for (int j = 0; j < quickDraws.size(); j++) {
+			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, quickDraws[j].wireFrame ? lineGraphicsPipeline : triangleGraphicsPipeline);
+			j += objects.size();
+			vkCmdPushConstants(commandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(int), (void*)&j);
+			j -= objects.size();
+			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(quickDraws[j].model->size), 1, static_cast<uint32_t>(quickDraws[j].model->offset), 0, 0);
+		}
+
 		vkCmdEndRenderPass(commandBuffers[i]);
 		
 		if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
 			throw std::runtime_error("failed to record command buffer!");
 		}
 	}
+	//emptying the quickDraws vector because it is the end of this frame and all quickDraws have been completed
+	quickDraws.clear();
 }
 
 void Graphics::createSyncObjects() {
@@ -1889,6 +1913,68 @@ void Graphics::loadObjects() {
 	addObject(glm::vec3(0,0,0), glm::vec3(1,1,1), 3);
 }
 
+//loads a rectangle with a texture mapped to it into vertices/indices starting at 0,0 extending to width,height and creates a usable model struct for it
+void Graphics::loadFlatImageModel(float width, float height, glm::vec2 imageMin, glm::vec2 imageMax){
+
+	// loading the vertices and indices into the vectors
+	width /= swapChainExtent.width;
+	height /= swapChainExtent.height;
+	imageMin.x /= TextureWidth;
+	imageMin.y /= TextureHeight;
+	imageMax.x /= TextureWidth;
+	imageMax.y /= TextureHeight;
+	Vertex temp = {};
+	temp.normal = glm::vec3(0.111, 0.111, 0.111);
+	temp.texCoord = imageMin;
+	temp.pos = glm::vec3(0, 0, 0);
+	// colour 0 0 0 0 makes the vertex shader not apply a projection matrix
+	temp.normal = glm::vec3( 0, 0, 0 );
+	vertices.push_back(temp);
+	temp.texCoord = glm::vec2(imageMin.x, imageMax.y);
+	temp.pos = glm::vec3(0, height, 0);
+	vertices.push_back(temp);
+	temp.texCoord = imageMax;
+	temp.pos = glm::vec3(width, height, 0);
+	vertices.push_back(temp);
+	temp.texCoord = glm::vec2(imageMax.x, imageMin.y);
+	temp.pos = glm::vec3(width, 0, 0);
+	vertices.push_back(temp);
+	indices.push_back(vertices.size() - 4);
+	indices.push_back(vertices.size() - 3);
+	indices.push_back(vertices.size() - 2);
+
+	indices.push_back(vertices.size() - 4);
+	indices.push_back(vertices.size() - 2);
+	indices.push_back(vertices.size() - 1);
+
+	// creating the model struct
+	models.push_back(Model());
+	models[models.size() - 1].offset = sizeOfAllModels;
+	models[models.size() - 1].size = 6; // 6 indices for the rectangle
+	sizeOfAllModels += 6;
+
+}
+
+void Graphics::loadFlatImageModels(){
+	loadFlatImageModel(637, 67, glm::vec2(286, 749), glm::vec2(286 + 637, 749 + 67)); // text box middle : 20
+	loadFlatImageModel(1940, 200, glm::vec2(0, 1484), glm::vec2(1940, 1684)); // main menu header : 21
+	loadFlatImageModel(-1940, 200, glm::vec2(0, 1684), glm::vec2(1940, 1884)); // save menu header : 22
+	loadFlatImageModel(1940, 200, glm::vec2(0, 1284), glm::vec2(1940, 1484)); // load menu header : 23
+	loadFlatImageModel(1396 + 200, 1108 + 200, glm::vec2(2001, 892), glm::vec2(2001 + 1396, 892 + 1108)); // help menu header : 24
+	//loading font (Model indices 25 to 89)
+	for (int i = 0; i < 65; i++) {
+		loadFlatImageModel(33, 55, glm::vec2(35 + i * 33, 632), glm::vec2(35 + (i + 1) * 33, 632 + 55));
+	}
+	loadFlatImageModel(800, 200, glm::vec2(0, 0), glm::vec2(800, 200)); // load workspace button : 90
+	loadFlatImageModel(800, 200, glm::vec2(800, 0), glm::vec2(1600, 200)); // save as button : 91
+	loadFlatImageModel(800, 200, glm::vec2(0, 200), glm::vec2(800, 400)); // exit button : 92
+	loadFlatImageModel(800, 200, glm::vec2(800, 200), glm::vec2(1600, 400)); // save button : 93
+	loadFlatImageModel(800, 200, glm::vec2(0, 400), glm::vec2(800, 600)); // save workspace button : 94
+	loadFlatImageModel(800, 200, glm::vec2(800, 400), glm::vec2(1600, 600)); // help button : 95
+	loadFlatImageModel(800, 200, glm::vec2(0, 883), glm::vec2(800, 1083)); // ok button : 96
+	loadFlatImageModel(800, 200, glm::vec2(0, 1083), glm::vec2(800, 1283)); // cancel button : 97
+}
+
 void Graphics::setUpCamera() {
 	cameraAngle = glm::vec3(1, 1, 1);
 	cameraPosition = glm::vec3(0, 0, 0);
@@ -1924,6 +2010,17 @@ void Graphics::setCameraPos(glm::vec3 cameraPos)
 
 GLFWwindow* Graphics::getWindowPointer() {
 	return window;
+}
+
+void Graphics::quickDraw(glm::vec3 position, int modelIndex, bool wireFrame){
+	if (quickDraws.size() < MAX_QUICKDRAWS) {
+		quickDraws.push_back(QuickDraw());
+		quickDraws[quickDraws.size()-1].model = &models[modelIndex];
+		quickDraws[quickDraws.size() - 1].position = position;
+		quickDraws[quickDraws.size() - 1].wireFrame = wireFrame;
+	} else {
+		std::cout << "Error, max quickdraws reached" << std::endl;
+	}
 }
 
 int Graphics::addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, bool wireFrame) {
@@ -2006,83 +2103,49 @@ void Graphics::scaleObject(int objectIndex, glm::vec3 scale) {
 	recalculateObjectMatrix(objectIndex);
 }
 
-void Graphics::recalculateObjectMatrix(int objectIndex)
-{
-	//objects[objectIndex].transformData = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, -0.5, -0.5));
-	//objects[objectIndex].transformData = glm::rotate(objects[objectIndex].transformData, objects[objectIndex].rotation.x, glm::vec3(1, 0, 0));
-	//objects[objectIndex].transformData = glm::rotate(objects[objectIndex].transformData, objects[objectIndex].rotation.y, glm::vec3(0, 1, 0));
-	//objects[objectIndex].transformData = glm::rotate(objects[objectIndex].transformData, objects[objectIndex].rotation.z, glm::vec3(0, 0, 1));
-	//objects[objectIndex].transformData = glm::translate(objects[objectIndex].transformData, glm::vec3(0.5, 0.5, 0.5));
-
+void Graphics::recalculateObjectMatrix(int objectIndex) {
 	//initial transform:
 	glm::mat4 transform1 = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, -0.5, -0.5));
 	//x axis rotation:
 	glm::mat4 xRotation = glm::inverse(glm::rotate(glm::mat4(1.0f), -objects[objectIndex].rotation.x, glm::vec3(1, 0, 0)));
+	//z axis rotation:
 	glm::mat4 yRotation = glm::inverse(glm::rotate(glm::mat4(1.0f), -objects[objectIndex].rotation.y, glm::vec3(0, 1, 0)));
+	//z axis rotation:
 	glm::mat4 zRotation = glm::inverse(glm::rotate(glm::mat4(1.0f), -objects[objectIndex].rotation.z, glm::vec3(0, 0, 1)));
 	//reset tranform:
 	glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5));
 	//position tranform:
 	glm::mat4 transform3 = glm::translate(glm::mat4(1.0f), objects[objectIndex].position);
-
 	objects[objectIndex].transformData = transform3 * transform2 * zRotation * yRotation * xRotation * transform1;
-
-	/*objects[objectIndex].transformData = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, -0.5, -0.5));
-
-	glm::vec4 test = objects[objectIndex].transformData * glm::vec4(1, 1, 1, 1);
-	
-	objects[objectIndex].transformData = glm::inverse(glm::rotate(glm::mat4(1.0f), -float(3.1515/2), glm::vec3(1, 0, 0)));
-	
-	//test = test * objects[objectIndex].transformData;
-	test = objects[objectIndex].transformData * test;
-
-	objects[objectIndex].transformData = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5));
-	
-	test = objects[objectIndex].transformData * test;
-
-	test = (glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5)) * glm::inverse(glm::rotate(glm::mat4(1.0f), -float(3.1515 / 2), glm::vec3(1, 0, 0))) * glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, -0.5, -0.5))) * glm::vec4(1, 1, 1, 1);
-	*/
-	//objects[objectIndex].transformData = glm::scale(objects[objectIndex].transformData, objects[objectIndex].scale);
 }
 
-//Object* Graphics::addObject(float x, float y, float z, int modelIndex) {
-//	if (objects.size() >= MAX_OBJECTS) { return NULL; }
-//
-//	objects.push_back(Object());
-//	objects[objects.size() - 1].model = &models[modelIndex];
-//	objects[objects.size() - 1].transformData = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
-//	
-//	return &(objects[objects.size() - 1]);
-//}
+void Graphics::calculateQuickDrawMatrix(int quickDrawIndex) {
+	quickDraws[quickDrawIndex].transformData = glm::translate(glm::mat4(1.0f), quickDraws[quickDrawIndex].position);
+}
 
-Object* Graphics::getObjectAtIndex(int i)
-{
+Object* Graphics::getObjectAtIndex(int i) {
 	if (i >= 0 && i < objects.size())
 	{
 		return &objects[i];
 	}
 } //cannot just store reference to object (as commented out addObject does) because i think on vector resize the memory addresses get changed
 
-glm::vec3 Graphics::getCameraPos()
-{
+glm::vec3 Graphics::getCameraPos() {
 	return cameraPosition;
 }
 
-void Graphics::setFreeLook(bool value)
-{
+void Graphics::setFreeLook(bool value) {
 	freeLook = value;
 }
 
-void Graphics::setObjectsWireFrame(bool value)
-{
+void Graphics::setObjectsWireFrame(bool value) {
 	for (auto &object : objects)
 	{
 		object.wireFrame = value;
 	}
 }
 
-void Graphics::setObjectVisible(int objectIndex, bool visible)
-{
+void Graphics::setObjectVisible(int objectIndex, bool visible) {
 	if (objectIndex < objects.size()) {
 		objects[objectIndex].visible = visible;
 	}
@@ -2092,8 +2155,7 @@ void Graphics::setObjectVisible(int objectIndex, bool visible)
 	
 }
 
-void Graphics::clearStorageBuffer()
-{
+void Graphics::clearStorageBuffer() {
 	vkDestroyBuffer(device, storageBuffer, nullptr);
 	vkFreeMemory(device, storageBufferMemory, nullptr);
 	storageBufferMemory = VK_NULL_HANDLE;

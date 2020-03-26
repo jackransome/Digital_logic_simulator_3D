@@ -35,14 +35,13 @@ out gl_PerVertex {
 
 void main() {
 
-	if (inColor == vec4(0,0,0,0)){
+	if (inNormal == vec3(0,0,0)){
 		//for menu elements and other things that need to be drawn falt on the screen without the projection matrix
-		gl_Position = vec4(inPosition, 1.0);
+		gl_Position = objects.transform[object.index] * vec4(inPosition, 1.0);
 	} else {
 		//applying the view matrix, projection matrix, and object matrix to the point
 		gl_Position = ubo.proj * ubo.view * objects.transform[object.index] * vec4(inPosition, 1.0);
 	}
-
 
     fragColor = inColor;
 

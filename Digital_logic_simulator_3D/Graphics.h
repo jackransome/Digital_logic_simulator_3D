@@ -39,6 +39,13 @@ struct Object {
 	bool relevant = true;
 };
 
+struct QuickDraw {
+	Model *model;
+	glm::mat4 transformData;
+	glm::vec3 position;
+	bool wireFrame = false;
+};
+
 struct UniformBufferObject {
 	//glm::mat4 model;
 	glm::mat4 view;
@@ -117,9 +124,7 @@ struct QueueFamilyIndices {
 };
 
 
-
-const std::string MODEL_PATH = "models/chalet.obj";
-const std::string TEXTURE_PATH = "textures/normal.png";
+const std::string TEXTURE_PATH = "textures/menuTexture.png";
 
 const std::vector<const char*> validationLayers = {
 	"VK_LAYER_LUNARG_standard_validation"
@@ -156,6 +161,8 @@ public:
 
 	GLFWwindow* getWindowPointer();
 
+	void quickDraw(glm::vec3 position, int modelIndex, bool wireFrame = false);
+
 	int addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, bool wireFrame = false);
 
 	int addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, glm::vec3 rotation, bool wireFrame = false);
@@ -170,7 +177,7 @@ public:
 
 	void recalculateObjectMatrix(int objectIndex);
 
-	//Object* addObject(float x, float y, float z, int modelIndex);
+	void calculateQuickDrawMatrix(int quickDrawIndex);
 
 	Object* getObjectAtIndex(int i);
 
@@ -188,9 +195,17 @@ private:
 
 	std::vector<Object> objects;
 
-	const int MAX_OBJECTS = 10000;
+	std::vector<QuickDraw> quickDraws;
+
+	const int MAX_OBJECTS = 9900;
+
+	const int MAX_QUICKDRAWS = 100;
 
 	int sizeOfAllModels = 0;
+
+	const int TextureWidth = 4000;
+
+	const int TextureHeight = 2000;
 
 	const int WIDTH = 1920;
 	const int HEIGHT = 1080;
@@ -283,6 +298,10 @@ private:
 	void loadModel(const char * path, glm::vec4 colour, glm::vec3 scale);
 
 	void loadModels();
+
+	void loadFlatImageModel(float width, float height, glm::vec2 imageMin, glm::vec2 imageMax);
+
+	void loadFlatImageModels();
 
 	void loadObjects();
 
