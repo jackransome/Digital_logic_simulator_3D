@@ -43,6 +43,7 @@ struct QuickDraw {
 	Model *model;
 	glm::mat4 transformData;
 	glm::vec3 position;
+	glm::vec3 scale;
 	bool wireFrame = false;
 };
 
@@ -161,13 +162,15 @@ public:
 
 	GLFWwindow* getWindowPointer();
 
-	void drawString(std::string string, float x, float y);
+	void drawString(std::string _string, float _x, float _y, float _scale);
 
-	void drawCharacter(char character, float x, float y);
+	void drawCharacter(char _character, float _x, float _y, float _scale);
 
-	void quickDraw(glm::vec3 position, int modelIndex, bool wireFrame = false);
+	void quickDraw(glm::vec3 _position, int _modelIndex, bool _wireFrame = false);
 
-	void quickDrawPixelCoordinates(glm::vec3 position, int modelIndex, bool wireFrame = false);
+	void quickDrawPixelCoordinates(glm::vec3 _position, int _modelIndex, bool _wireFrame = false);
+
+	void quickDrawPixelCoordinates(glm::vec3 _position, glm::vec3 _scale, int _modelIndex, bool _wireFrame = false);
 
 	int addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, bool wireFrame = false);
 
@@ -301,11 +304,13 @@ private:
 
 	bool framebufferResized = false;
 
-	void loadModel(const char * path, glm::vec4 colour, glm::vec3 scale);
+	void loadModel(const char * _path, glm::vec4 _colour, glm::vec3 _scale);
 
 	void loadModels();
 
-	void loadFlatImageModel(float width, float height, glm::vec2 imageMin, glm::vec2 imageMax);
+	void loadFlatImageModel(float _width, float _height, glm::vec2 _imageMin, glm::vec2 _imageMax);
+
+	void loadFlatColourModel(float _width, float _height, glm::vec4 _colour);
 
 	void loadFlatImageModels();
 

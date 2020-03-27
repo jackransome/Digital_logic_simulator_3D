@@ -69,75 +69,78 @@ int main()
 					cos(globals::input.cameraAngle.x - 3.14f / 2.0f)
 				);
 
-				if (globals::input.keys.keyCounts["w"]) {
-					cameraPos += glm::vec3(forward.x, 0, forward.z) * 0.1f;
-				}
+				if (!globals::input.inMenu) {
+					if (globals::input.keys.keyCounts["w"]) {
+						cameraPos += glm::vec3(forward.x, 0, forward.z) * 0.1f;
+					}
 
-				if (globals::input.keys.keyCounts["a"]) {
-					cameraPos -= glm::vec3(right.x, 0, right.z) * 0.1f;
-				}
+					if (globals::input.keys.keyCounts["a"]) {
+						cameraPos -= glm::vec3(right.x, 0, right.z) * 0.1f;
+					}
 
-				if (globals::input.keys.keyCounts["s"]) {
-					cameraPos -= glm::vec3(forward.x, 0, forward.z) * 0.1f;
-				}
+					if (globals::input.keys.keyCounts["s"]) {
+						cameraPos -= glm::vec3(forward.x, 0, forward.z) * 0.1f;
+					}
 
-				if (globals::input.keys.keyCounts["d"]) {
-					cameraPos += glm::vec3(right.x, 0, right.z) * 0.1f;
-				}
+					if (globals::input.keys.keyCounts["d"]) {
+						cameraPos += glm::vec3(right.x, 0, right.z) * 0.1f;
+					}
 
-				if (globals::input.keys.keyCounts["leftShift"]) {
-					cameraPos.y -= 0.1;
-				}
+					if (globals::input.keys.keyCounts["leftShift"]) {
+						cameraPos.y -= 0.1;
+					}
 
-				if (globals::input.keys.keyCounts["space"]) {
-					cameraPos.y += 0.1;
-				}
+					if (globals::input.keys.keyCounts["space"]) {
+						cameraPos.y += 0.1;
+					}
 
-				if (globals::input.keys.keyCounts["n1"]) {
-					componentTypeSelected = wire;
-				}
+					if (globals::input.keys.keyCounts["n1"]) {
+						componentTypeSelected = wire;
+					}
 
-				if (globals::input.keys.keyCounts["n2"]) {
-					componentTypeSelected = inverter;
-				}
+					if (globals::input.keys.keyCounts["n2"]) {
+						componentTypeSelected = inverter;
+					}
 
-				if (globals::input.keys.keyCounts["n3"]) {
-					componentTypeSelected = andGate;
-				}
+					if (globals::input.keys.keyCounts["n3"]) {
+						componentTypeSelected = andGate;
+					}
 
-				if (globals::input.keys.keyCounts["n4"]) {
-					componentTypeSelected = orGate;
-				}
+					if (globals::input.keys.keyCounts["n4"]) {
+						componentTypeSelected = orGate;
+					}
 
-				if (globals::input.keys.keyCounts["n5"]) {
-					componentTypeSelected = xorGate;
-				}
+					if (globals::input.keys.keyCounts["n5"]) {
+						componentTypeSelected = xorGate;
+					}
 
-				if (globals::input.keys.keyCounts["f"]) {
-					digitalLogic.addComponent(cameraPos.x, cameraPos.y, cameraPos.z, wire);
+					if (globals::input.keys.keyCounts["f"]) {
+						digitalLogic.addComponent(cameraPos.x, cameraPos.y, cameraPos.z, wire);
+					}
+
+					if (globals::input.keys.keyCounts["mouseRight"] == 1) {
+						componentManipulation.deleteComponent(cameraPos, cameraDirection);
+					}
+
+					if (globals::input.keys.keyCounts["leftCtrl"] == 1)
+					{
+						globals::gfx.setObjectsWireFrame(true);
+					}
+					else if (globals::input.keys.keyCounts["leftCtrl"] == 0)
+					{
+						globals::gfx.setObjectsWireFrame(false);
+					}
 				}
 
 				if (globals::input.keys.keyCounts["mouseLeft"] == 1) {
 					if (globals::input.inMenu) {
-						gui.updateButtons(globals::input.mousePosInWindow);
+						gui.updateButtons();
+						gui.checkTextBoxs();
 					}
 					componentManipulation.placeComponent(cameraPos, cameraDirection, componentTypeSelected);
 				}
 
-				if (globals::input.keys.keyCounts["mouseRight"] == 1) {
-					componentManipulation.deleteComponent(cameraPos, cameraDirection);
-				}
-				
 				printf("x: %f, y: %f\n", globals::input.mousePosInWindow.x, globals::input.mousePosInWindow.y);
-
-				if (globals::input.keys.keyCounts["leftCtrl"] == 1)
-				{
-					globals::gfx.setObjectsWireFrame(true);
-				}
-				else if (globals::input.keys.keyCounts["leftCtrl"] == 0)
-				{
-					globals::gfx.setObjectsWireFrame(false);
-				}
 
 				if (globals::input.keys.keyCounts["escape"] == 1) {
 					if (globals::input.inMenu) {
@@ -148,15 +151,15 @@ int main()
 					}
 				}
 				if (globals::input.inMenu) {
-					gui.updateTextBox();
+					gui.updateTextBoxs();
 				}
 				accumulator -= globals::dt;
 			}
 			if (globals::input.inMenu) {
 				gui.drawGUI();
 			}
-			//globals::gfx.quickDrawPixelCoordinates(glm::vec3(0, 0, 0), 92);
-			//globals::gfx.drawString("012345 test string - . _", globals::input.mousePosInWindow.x, globals::input.mousePosInWindow.y);
+			//globals::gfx.quickDrawPixelCoordinates(glm::vec3(0, 0, 0), glm::vec3(50, 50, 1), 98);
+			//globals::gfx.quickDrawPixelCoordinates(glm::vec3(5, 5, 0), glm::vec3(50, 50, 1), 98);
 			digitalLogic.runLogic();
 			digitalLogic.updateModels();
 			globals::gfx.run();

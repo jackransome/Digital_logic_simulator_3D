@@ -43,7 +43,11 @@ void main() {
 
 	vec3 result = (ambient + diffuse + specular) * objectColor;
 	if (fragTexCoord.x < 0 && fragTexCoord.y < 0){
-		outColor = vec4(result, 1.0);
+		if (Normal == vec3(0,0,0)){
+			outColor = vec4(objectColor,1);
+		} else {
+			outColor = vec4(result, 1.0);
+		}
 	} else {
 		outColor = texture(texSampler, fragTexCoord);
 	}

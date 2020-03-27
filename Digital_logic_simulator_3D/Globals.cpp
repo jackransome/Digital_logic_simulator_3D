@@ -18,11 +18,16 @@ namespace globals
 		globals::input.mouse_button_callback(key, action, mods);
 	}
 
+	void window_focus_callback(GLFWwindow* window, int focused) {
+		globals::input.window_focus_callback(focused);
+	}
+
 	void globalInit()
 	{
 		gfx.init();
 		input.init(globals::gfx.getWindowPointer());
 		glfwSetKeyCallback(globals::gfx.getWindowPointer(), key_callback);
 		glfwSetMouseButtonCallback(globals::gfx.getWindowPointer(), mouse_button_callback);
+		glfwSetWindowFocusCallback(globals::gfx.getWindowPointer(), window_focus_callback);
 	}
 }

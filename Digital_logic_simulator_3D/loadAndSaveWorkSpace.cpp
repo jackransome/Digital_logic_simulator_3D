@@ -76,7 +76,7 @@ void LoadAndSaveWorkspace::saveBlock(Component* _component)
 	char tempChar[100];
 	char integer_string[4];
 	sprintf_s(integer_string, "%d", componentCounter + 1);
-	char blockChar[500] = "<Block";
+	char blockChar[500] = "<B";
 	strcat_s(blockChar, integer_string);
 	strcpy_s(tempChar, ">\n\t<x>");
 	strcat_s(blockChar, tempChar);
@@ -87,13 +87,13 @@ void LoadAndSaveWorkspace::saveBlock(Component* _component)
 	strcpy_s(tempChar, "</y>\n\t<z>");
 	strcat_s(blockChar, tempChar);
 	strcat_s(blockChar, charZ);
-	strcpy_s(tempChar, "</z>\n\t<Type>");
+	strcpy_s(tempChar, "</z>\n\t<T>");
 	strcat_s(blockChar, tempChar);
 	strcat_s(blockChar, charType);
-	strcpy_s(tempChar, "</Type>\n\t<Direction>");
+	strcpy_s(tempChar, "</T>\n\t<D>");
 	strcat_s(blockChar, tempChar);
 	strcat_s(blockChar, charDirection);
-	strcpy_s(tempChar, "</Direction>\n</Block");
+	strcpy_s(tempChar, "</D>\n</B");
 	strcat_s(blockChar, tempChar);
 	strcat_s(blockChar, integer_string);
 	strcpy_s(tempChar, "> \n");
@@ -133,7 +133,7 @@ void LoadAndSaveWorkspace::addBlockFromXML(tinyxml2::XMLElement* _parsedXML, std
 		(int)atof((char*)(const char*)(_parsedXML->FirstChildElement("x"))->GetText()),
 		(int)atof((char*)(const char*)(_parsedXML->FirstChildElement("y"))->GetText()),
 		(int)atof((char*)(const char*)(_parsedXML->FirstChildElement("z"))->GetText()),
-		static_cast<componentType>((int)atof((char*)(const char*)(_parsedXML->FirstChildElement("Type"))->GetText())),
-		static_cast<componentDirection>((int)atof((char*)(const char*)(_parsedXML->FirstChildElement("Direction"))->GetText()))
+		static_cast<componentType>((int)atof((char*)(const char*)(_parsedXML->FirstChildElement("T"))->GetText())),
+		static_cast<componentDirection>((int)atof((char*)(const char*)(_parsedXML->FirstChildElement("D"))->GetText()))
 	));
 }

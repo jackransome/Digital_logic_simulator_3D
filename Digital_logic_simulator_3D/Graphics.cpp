@@ -1914,30 +1914,29 @@ void Graphics::loadObjects() {
 }
 
 //loads a rectangle with a texture mapped to it into vertices/indices starting at 0,0 extending to width,height and creates a usable model struct for it
-void Graphics::loadFlatImageModel(float width, float height, glm::vec2 imageMin, glm::vec2 imageMax){
+void Graphics::loadFlatImageModel(float _width, float _height, glm::vec2 _imageMin, glm::vec2 _imageMax){
 
 	// loading the vertices and indices into the vectors
-	width /= swapChainExtent.width;
-	height /= swapChainExtent.height;
-	imageMin.x /= TextureWidth;
-	imageMin.y /= TextureHeight;
-	imageMax.x /= TextureWidth;
-	imageMax.y /= TextureHeight;
+	_width /= swapChainExtent.width / 2;
+	_height /= swapChainExtent.height / 2;
+	_imageMin.x /= TextureWidth;
+	_imageMin.y /= TextureHeight;
+	_imageMax.x /= TextureWidth;
+	_imageMax.y /= TextureHeight;
 	Vertex temp = {};
-	temp.normal = glm::vec3(0.111, 0.111, 0.111);
-	temp.texCoord = imageMin;
+	temp.texCoord = _imageMin;
 	temp.pos = glm::vec3(0, 0, 0);
-	// colour 0 0 0 0 makes the vertex shader not apply a projection matrix
+	// normal 0 0 0 0 makes the vertex shader not apply a projection matrix
 	temp.normal = glm::vec3( 0, 0, 0 );
 	vertices.push_back(temp);
-	temp.texCoord = glm::vec2(imageMin.x, imageMax.y);
-	temp.pos = glm::vec3(0, height, 0);
+	temp.texCoord = glm::vec2(_imageMin.x, _imageMax.y);
+	temp.pos = glm::vec3(0, _height, 0);
 	vertices.push_back(temp);
-	temp.texCoord = imageMax;
-	temp.pos = glm::vec3(width, height, 0);
+	temp.texCoord = _imageMax;
+	temp.pos = glm::vec3(_width, _height, 0);
 	vertices.push_back(temp);
-	temp.texCoord = glm::vec2(imageMax.x, imageMin.y);
-	temp.pos = glm::vec3(width, 0, 0);
+	temp.texCoord = glm::vec2(_imageMax.x, _imageMin.y);
+	temp.pos = glm::vec3(_width, 0, 0);
 	vertices.push_back(temp);
 	indices.push_back(vertices.size() - 4);
 	indices.push_back(vertices.size() - 3);
@@ -1952,7 +1951,41 @@ void Graphics::loadFlatImageModel(float width, float height, glm::vec2 imageMin,
 	models[models.size() - 1].offset = sizeOfAllModels;
 	models[models.size() - 1].size = 6; // 6 indices for the rectangle
 	sizeOfAllModels += 6;
+}
 
+//loads a rectangle in a chosen colour starting 0,0 extending to width,height and creates a usable model struct for it
+void Graphics::loadFlatColourModel(float _width, float _height, glm::vec4 _colour) {
+
+	// loading the vertices and indices into the vectors
+	_width /= swapChainExtent.width / 2;
+	_height /= swapChainExtent.height / 2;
+	Vertex temp = {};
+	// negative texCoord means no texture
+	temp.texCoord = glm::vec2(-100, -100);
+	temp.pos = glm::vec3(0, 0, 0);
+	// normal 0 0 0 makes the vertex shader not apply a projection matrix
+	temp.normal = glm::vec3(0, 0, 0);
+	temp.color = _colour;
+	vertices.push_back(temp);
+	temp.pos = glm::vec3(0, _height, 0);
+	vertices.push_back(temp);
+	temp.pos = glm::vec3(_width, _height, 0);
+	vertices.push_back(temp);
+	temp.pos = glm::vec3(_width, 0, 0);
+	vertices.push_back(temp);
+	indices.push_back(vertices.size() - 4);
+	indices.push_back(vertices.size() - 3);
+	indices.push_back(vertices.size() - 2);
+
+	indices.push_back(vertices.size() - 4);
+	indices.push_back(vertices.size() - 2);
+	indices.push_back(vertices.size() - 1);
+
+	// creating the model struct
+	models.push_back(Model());
+	models[models.size() - 1].offset = sizeOfAllModels;
+	models[models.size() - 1].size = 6; // 6 indices for the rectangle
+	sizeOfAllModels += 6;
 }
 
 void Graphics::loadFlatImageModels(){
@@ -1973,6 +2006,10 @@ void Graphics::loadFlatImageModels(){
 	loadFlatImageModel(800, 200, glm::vec2(800, 400), glm::vec2(1600, 600)); // help button : 95
 	loadFlatImageModel(800, 200, glm::vec2(0, 883), glm::vec2(800, 1083)); // ok button : 96
 	loadFlatImageModel(800, 200, glm::vec2(0, 1083), glm::vec2(800, 1283)); // cancel button : 97
+	//some flat coloured squares for colour rectangle/square drawing:
+	loadFlatColourModel(1, 1, glm::vec4(0, 0, 0, 1)); // black square : 98
+	loadFlatColourModel(1, 1, glm::vec4(1, 1, 1, 1)); // white square : 99
+	loadFlatColourModel(1, 1, glm::vec4(0.5, 0.5, 0.5, 1)); // grey square : 100
 }
 
 void Graphics::setUpCamera() {
@@ -2012,33 +2049,33 @@ GLFWwindow* Graphics::getWindowPointer() {
 	return window;
 }
 
-void Graphics::drawString(std::string string, float x, float y){
-	for (int i = 0; i < string.size(); i++) {
-		drawCharacter(string[i], x + i * 20, y);
+void Graphics::drawString(std::string _string, float _x, float _y, float _scale){
+	for (int i = 0; i < _string.size(); i++) {
+		drawCharacter(_string[i], _x + i * 40*_scale, _y, _scale);
 	}
 }
 
-void Graphics::drawCharacter(char character, float x, float y) {
+void Graphics::drawCharacter(char _character, float _x, float _y, float _scale) {
 	int characterNumber; // this is what number character to draw, in the menuTexture.png file, far left (a) = 0 etc
 	//for lowercase:
-	if (character >= 97 && character <= 122) {
-		characterNumber = character - 97;
+	if (_character >= 97 && _character <= 122) {
+		characterNumber = _character - 97;
 	}
 	//for uppercase:
-	else if (character >= 65 && character <= 90) {
-		characterNumber = character - 65 + 26;
+	else if (_character >= 65 && _character <= 90) {
+		characterNumber = _character - 65 + 26;
 	}
 	//for uppercase:
-	else if (character >= 48 && character <= 57) {
-		characterNumber = character - 48 + 52;
+	else if (_character >= 48 && _character <= 57) {
+		characterNumber = _character - 48 + 52;
 	}
 	//for - _ and .:
-	else if (character == '-') characterNumber = 62;
-	else if (character == '_') characterNumber = 63;
-	else if (character == '.') characterNumber = 64;
+	else if (_character == '-') characterNumber = 62;
+	else if (_character == '_') characterNumber = 63;
+	else if (_character == '.') characterNumber = 64;
 	else return;
 	//coordinates x and y as parameters end up being pixel values instead of 1,1 being one corner of the screen and -1,-1 being the other
-	quickDrawPixelCoordinates(glm::vec3(x, y, 0), 25 + characterNumber);
+	quickDrawPixelCoordinates(glm::vec3(_x, _y, 0), glm::vec3(_scale, _scale, 1), 25 + characterNumber);
 }
 
 void Graphics::quickDraw(glm::vec3 position, int modelIndex, bool wireFrame){
@@ -2046,25 +2083,43 @@ void Graphics::quickDraw(glm::vec3 position, int modelIndex, bool wireFrame){
 		quickDraws.push_back(QuickDraw());
 		quickDraws[quickDraws.size()-1].model = &models[modelIndex];
 		quickDraws[quickDraws.size() - 1].position = position;
+		quickDraws[quickDraws.size() - 1].scale = glm::vec3(1, 1, 1);
 		quickDraws[quickDraws.size() - 1].wireFrame = wireFrame;
 	} else {
 		std::cout << "Error, max quickdraws reached" << std::endl;
 	}
 }
 
-void Graphics::quickDrawPixelCoordinates(glm::vec3 position, int modelIndex, bool wireFrame) {
-	position.x /= (swapChainExtent.width/2);
-	position.y /= (swapChainExtent.height/2);
+void Graphics::quickDrawPixelCoordinates(glm::vec3 _position, int _modelIndex, bool _wireFrame) {
+	_position.x /= (swapChainExtent.width/2);
+	_position.y /= (swapChainExtent.height/2);
 	if (quickDraws.size() < MAX_QUICKDRAWS) {
 		quickDraws.push_back(QuickDraw());
-		quickDraws[quickDraws.size() - 1].model = &models[modelIndex];
-		quickDraws[quickDraws.size() - 1].position = position;
-		quickDraws[quickDraws.size() - 1].wireFrame = wireFrame;
+		quickDraws[quickDraws.size() - 1].model = &models[_modelIndex];
+		quickDraws[quickDraws.size() - 1].position = _position;
+		quickDraws[quickDraws.size() - 1].scale = glm::vec3(1,1,1);
+		quickDraws[quickDraws.size() - 1].wireFrame = _wireFrame;
 	}
 	else {
 		std::cout << "Error, max quickdraws reached" << std::endl;
 	}
 }
+
+void Graphics::quickDrawPixelCoordinates(glm::vec3 _position, glm::vec3 _scale, int _modelIndex, bool _wireFrame) {
+	_position.x /= (swapChainExtent.width / 2);
+	_position.y /= (swapChainExtent.height / 2);
+	if (quickDraws.size() < MAX_QUICKDRAWS) {
+		quickDraws.push_back(QuickDraw());
+		quickDraws[quickDraws.size() - 1].model = &models[_modelIndex];
+		quickDraws[quickDraws.size() - 1].position = _position;
+		quickDraws[quickDraws.size() - 1].scale = _scale;
+		quickDraws[quickDraws.size() - 1].wireFrame = _wireFrame;
+	}
+	else {
+		std::cout << "Error, max quickdraws reached" << std::endl;
+	}
+}
+
 
 
 int Graphics::addObject(glm::vec3 position, glm::vec3 scale, int modelIndex, bool wireFrame) {
@@ -2165,6 +2220,7 @@ void Graphics::recalculateObjectMatrix(int objectIndex) {
 
 void Graphics::calculateQuickDrawMatrix(int quickDrawIndex) {
 	quickDraws[quickDrawIndex].transformData = glm::translate(glm::mat4(1.0f), quickDraws[quickDrawIndex].position);
+	quickDraws[quickDrawIndex].transformData = glm::scale(quickDraws[quickDrawIndex].transformData, quickDraws[quickDrawIndex].scale);
 }
 
 Object* Graphics::getObjectAtIndex(int i) {
