@@ -148,7 +148,6 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="loadAndSaveWorkSpace.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Source.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>

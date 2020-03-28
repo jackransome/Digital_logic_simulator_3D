@@ -1906,6 +1906,8 @@ void Graphics::loadModels()
 	loadModel("models/wire_center.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // wireCenter on : 17
 	loadModel("models/XorGate.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // XorGate off : 18
 	loadModel("models/XorGate.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // XorGate on : 19
+	loadModel("models/box.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // LED off : 20
+	loadModel("models/box.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // LED on : 21
 
 }
 
@@ -1989,27 +1991,27 @@ void Graphics::loadFlatColourModel(float _width, float _height, glm::vec4 _colou
 }
 
 void Graphics::loadFlatImageModels(){
-	loadFlatImageModel(637, 67, glm::vec2(286, 749), glm::vec2(286 + 637, 749 + 67)); // text box middle : 20
-	loadFlatImageModel(1940, 200, glm::vec2(0, 1484), glm::vec2(1940, 1684)); // main menu header : 21
-	loadFlatImageModel(-1940, 200, glm::vec2(0, 1684), glm::vec2(1940, 1884)); // save menu header : 22
-	loadFlatImageModel(1940, 200, glm::vec2(0, 1284), glm::vec2(1940, 1484)); // load menu header : 23
-	loadFlatImageModel(1396 + 200, 1108 + 200, glm::vec2(2001, 892), glm::vec2(2001 + 1396, 892 + 1108)); // help menu header : 24
-	//loading font (Model indices 25 to 89)
+	loadFlatImageModel(637, 67, glm::vec2(286, 749), glm::vec2(286 + 637, 749 + 67)); // text box middle : 22
+	loadFlatImageModel(1940, 200, glm::vec2(0, 1484), glm::vec2(1940, 1684)); // main menu header : 23
+	loadFlatImageModel(1940, 200, glm::vec2(0, 1684), glm::vec2(1940, 1884)); // save menu header : 24
+	loadFlatImageModel(1940, 200, glm::vec2(0, 1284), glm::vec2(1940, 1484)); // load menu header : 25
+	loadFlatImageModel(1396 + 200, 1108 + 200, glm::vec2(2001, 892), glm::vec2(2001 + 1396, 892 + 1108)); // help menu image : 26
+	//loading font (Model indices 27 to 91)
 	for (int i = 0; i < 65; i++) {
 		loadFlatImageModel(33, 55, glm::vec2(35 + i * 33, 632), glm::vec2(35 + (i + 1) * 33, 632 + 55));
 	}
-	loadFlatImageModel(800, 200, glm::vec2(0, 0), glm::vec2(800, 200)); // load workspace button : 90
-	loadFlatImageModel(800, 200, glm::vec2(800, 0), glm::vec2(1600, 200)); // save as button : 91
-	loadFlatImageModel(800, 200, glm::vec2(0, 200), glm::vec2(800, 400)); // exit button : 92
-	loadFlatImageModel(800, 200, glm::vec2(800, 200), glm::vec2(1600, 400)); // save button : 93
-	loadFlatImageModel(800, 200, glm::vec2(0, 400), glm::vec2(800, 600)); // save workspace button : 94
-	loadFlatImageModel(800, 200, glm::vec2(800, 400), glm::vec2(1600, 600)); // help button : 95
-	loadFlatImageModel(800, 200, glm::vec2(0, 883), glm::vec2(800, 1083)); // ok button : 96
-	loadFlatImageModel(800, 200, glm::vec2(0, 1083), glm::vec2(800, 1283)); // cancel button : 97
+	loadFlatImageModel(800, 200, glm::vec2(0, 0), glm::vec2(800, 200)); // load workspace button : 92
+	loadFlatImageModel(800, 200, glm::vec2(800, 0), glm::vec2(1600, 200)); // save as button : 93
+	loadFlatImageModel(800, 200, glm::vec2(0, 200), glm::vec2(800, 400)); // exit button : 94
+	loadFlatImageModel(800, 200, glm::vec2(800, 200), glm::vec2(1600, 400)); // save button : 95
+	loadFlatImageModel(800, 200, glm::vec2(0, 400), glm::vec2(800, 600)); // save workspace button : 96
+	loadFlatImageModel(800, 200, glm::vec2(800, 400), glm::vec2(1600, 600)); // help button : 97
+	loadFlatImageModel(800, 200, glm::vec2(0, 883), glm::vec2(800, 1083)); // ok button : 98
+	loadFlatImageModel(800, 200, glm::vec2(0, 1083), glm::vec2(800, 1283)); // cancel button : 99
 	//some flat coloured squares for colour rectangle/square drawing:
-	loadFlatColourModel(1, 1, glm::vec4(0, 0, 0, 1)); // black square : 98
-	loadFlatColourModel(1, 1, glm::vec4(1, 1, 1, 1)); // white square : 99
-	loadFlatColourModel(1, 1, glm::vec4(0.5, 0.5, 0.5, 1)); // grey square : 100
+	loadFlatColourModel(1, 1, glm::vec4(0, 0, 0, 1)); // black square : 100
+	loadFlatColourModel(1, 1, glm::vec4(1, 1, 1, 1)); // white square : 101
+	loadFlatColourModel(1, 1, glm::vec4(0.5, 0.5, 0.5, 1)); // grey square : 102
 }
 
 void Graphics::setUpCamera() {
@@ -2075,7 +2077,7 @@ void Graphics::drawCharacter(char _character, float _x, float _y, float _scale) 
 	else if (_character == '.') characterNumber = 64;
 	else return;
 	//coordinates x and y as parameters end up being pixel values instead of 1,1 being one corner of the screen and -1,-1 being the other
-	quickDrawPixelCoordinates(glm::vec3(_x, _y, 0), glm::vec3(_scale, _scale, 1), 25 + characterNumber);
+	quickDrawPixelCoordinates(glm::vec3(_x, _y, 0), glm::vec3(_scale, _scale, 1), 27 + characterNumber);
 }
 
 void Graphics::quickDraw(glm::vec3 position, int modelIndex, bool wireFrame){

@@ -105,6 +105,7 @@ bool DigitalLogic::removeComponent(int _index)
 	components.erase(components.begin() + _index);
 	return true;
 }
+
 //checks if a block of a particular position exists in the vector
 bool DigitalLogic::doesComponentExist(int x, int y, int z) {
 	for (int i = 0; i < components.size(); i++) {
@@ -326,6 +327,8 @@ int DigitalLogic::getModelIndex(componentType type, bool state)
 		return 18 + state;
 	case wire:
 		return 14 + state;
+	case LED:
+		return 20 + state;
 	}
 }
 
@@ -455,6 +458,24 @@ void DigitalLogic::runLogic()
 void DigitalLogic::clearComponents(){
 	for (int i = 0; i < components.size(); i++) {
 		removeComponent(i);
+	}
+}
+
+componentType DigitalLogic::getComponentType(int _x, int _y, int _z){
+	if (doesComponentExist(_x, _y, _z)) {
+		return components[getComponent(_x, _y, _z)]->type;
+	}
+}
+
+bool DigitalLogic::getComponentState(int _x, int _y, int _z) {
+	if (doesComponentExist(_x, _y, _z)) {
+		return components[getComponent(_x, _y, _z)]->state;
+	}
+}
+
+void DigitalLogic::setComponentState(int _x, int _y, int _z, bool _state) {
+	if (doesComponentExist(_x, _y, _z)) {
+		components[getComponent(_x, _y, _z)]->state = _state;
 	}
 }
 

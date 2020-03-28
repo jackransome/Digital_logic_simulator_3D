@@ -7,15 +7,18 @@ class DigitalLogic {
 public:
 	DigitalLogic();
 	void init();
-	void addComponent(int x, int y, int z, componentType type);
-	void addComponent(int x, int y, int z, componentType type, componentDirection direction);
-	bool removeComponent(int x, int y, int z);
+	void addComponent(int _x, int _y, int _z, componentType _type);
+	void addComponent(int _x, int _y, int _z, componentType _type, componentDirection _direction);
+	bool removeComponent(int _x, int _y, int _z);
 	bool removeComponent(int _index);
 	int getVectorSize();
-	int getComponent(int x, int y, int z);
+	int getComponent(int _x, int _y, int _z);
 	void updateModels();
 	void runLogic();
 	void clearComponents();
+	componentType getComponentType(int _x, int _y, int _z);
+	bool getComponentState(int _x, int _y, int _z);
+	void setComponentState(int _x, int _y, int _z, bool _state);
 	std::vector<Component*>* getComponentsPointer();
 
 private:

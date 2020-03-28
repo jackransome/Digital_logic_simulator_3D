@@ -1,6 +1,6 @@
 #pragma once
 #include "tinyxml2.h"
-#include "Component.h"
+#include "DigitalLogic.h"
 
 #include <fstream>
 #include <vector>
@@ -14,7 +14,7 @@ class LoadAndSaveWorkspace {
 public:
 	LoadAndSaveWorkspace();
 	~LoadAndSaveWorkspace();
-	void loadWorkSpace(std::vector<Component*>* _components, std::string _xmlPath);
+	void loadWorkSpace(DigitalLogic* _digitalLogic, std::string _xmlPath);
 	void saveWorkSpace(std::vector<Component*> *_components, std::string _path);
 	//Block counter used to keep track of the number of blocks, so the blocks can be named appropriately in XML
 	int componentCounter;
@@ -22,10 +22,10 @@ public:
 	void indexFiles(std::string _path);
 	std::vector<std::string> getFileNames();
 private:
-	void addBlockFromXML(tinyxml2::XMLElement* _parsedXML, std::vector<Component*>* _components);
+	void addBlockFromXML(tinyxml2::XMLElement* _parsedXML, DigitalLogic* _digitalLogic);
 	void saveBlock(Component* _component);
 	//The temporary char where XML data is stored before being put into the XML file
-	char xmlFileChar[10000];
+	char xmlFileChar[100000];
 	tinyxml2::XMLDocument xmlFile;
 	std::vector<std::string> fileNames;
 

@@ -155,3 +155,15 @@ float ComponentManipulation::get3DDistance(glm::vec3 _p1, glm::vec3 _p2) {
 	}
 	return sqrt(pow((_p1.x - _p2.x), 2) + pow((_p1.y - _p2.y), 2) + pow((_p1.z - _p2.z), 2));
 }
+
+void ComponentManipulation::switchButton(glm::vec3 _cameraPosition, glm::vec3 _cameraDirection) {
+	glm::vec3 component = getSelectedComponent(_cameraPosition, _cameraDirection);
+	if (digitalLogicPointer->getComponentType(component.x, component.y, component.z) == button) {
+		if (digitalLogicPointer->getComponentState(component.x, component.y, component.z) == true) {
+			digitalLogicPointer->setComponentState(component.x, component.y, component.z, false);
+		}
+		else {
+			digitalLogicPointer->setComponentState(component.x, component.y, component.z, true);
+		}
+	}
+}

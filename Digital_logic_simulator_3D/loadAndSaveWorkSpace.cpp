@@ -8,7 +8,7 @@ LoadAndSaveWorkspace::~LoadAndSaveWorkspace()
 {
 }
 
-void LoadAndSaveWorkspace::loadWorkSpace(std::vector<Component*>* _components, std::string _xmlPath)
+void LoadAndSaveWorkspace::loadWorkSpace(DigitalLogic* _digitalLogic, std::string _xmlPath)
 {
 	if (!doesFileExist(_xmlPath)) {
 		std::cout << "file " << _xmlPath << " not found" << std::endl;
@@ -20,14 +20,17 @@ void LoadAndSaveWorkspace::loadWorkSpace(std::vector<Component*>* _components, s
 	tinyxml2::XMLElement* numberOfBlocks = xmlFile.FirstChildElement("NUMBEROFBLOCKS");
 	for (int i = 1; i < atof((char*)(const char*)(numberOfBlocks)->GetText()) + 1; i++)
 	{
+		if (i == 625) {
+			int y = 0;
+		}
 		//creating a string with the name of the next block to parse. eg: "BLOCK4"
 		char integer_string[4];
 		sprintf_s(integer_string, "%d", i);
-		char p[10] = "Block";
+		char p[10] = "B";
 		strcat_s(p, integer_string);
 		//using tinyXML to parse the xml in the file for this particular block
 		tinyxml2::XMLElement* parsedxml = xmlFile.FirstChildElement(p);
-		addBlockFromXML(parsedxml, _components);
+		addBlockFromXML(parsedxml, _digitalLogic);
 	}
 }
 
@@ -126,14 +129,14 @@ std::vector<std::string> LoadAndSaveWorkspace::getFileNames()
 	return fileNames;
 }
 
-void LoadAndSaveWorkspace::addBlockFromXML(tinyxml2::XMLElement* _parsedXML, std::vector<Component*>* _components)
+void LoadAndSaveWorkspace::addBlockFromXML(tinyxml2::XMLElement* _parsedXML, DigitalLogic* _digitalLogic)
 {
 	//parsing the xml data and using it the create a new block which is then added to the blocks vector
-	_components->push_back(new Component(
+	_digitalLogic->addComponent(
 		(int)atof((char*)(const char*)(_parsedXML->FirstChildElement("x"))->GetText()),
 		(int)atof((char*)(const char*)(_parsedXML->FirstChildElement("y"))->GetText()),
 		(int)atof((char*)(const char*)(_parsedXML->FirstChildElement("z"))->GetText()),
 		static_cast<componentType>((int)atof((char*)(const char*)(_parsedXML->FirstChildElement("T"))->GetText())),
 		static_cast<componentDirection>((int)atof((char*)(const char*)(_parsedXML->FirstChildElement("D"))->GetText()))
-	));
+	);
 }

@@ -28,7 +28,6 @@ private:
 	Buttons buttons;
 	LoadAndSaveWorkspace loadAndSaveWorkspace;
 	std::string currentFileName = "";
-	std::string inputString = "";
 	MenuState menuState = mainMenu;
 	DigitalLogic* digitalLogic;
 	std::vector<Textbox> textBoxs;

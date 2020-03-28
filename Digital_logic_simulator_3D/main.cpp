@@ -114,6 +114,14 @@ int main()
 						componentTypeSelected = xorGate;
 					}
 
+					if (globals::input.keys.keyCounts["n6"]) {
+						componentTypeSelected = LED;
+					}
+
+					if (globals::input.keys.keyCounts["n7"]) {
+						componentTypeSelected = button;
+					}
+
 					if (globals::input.keys.keyCounts["f"]) {
 						digitalLogic.addComponent(cameraPos.x, cameraPos.y, cameraPos.z, wire);
 					}
@@ -137,7 +145,15 @@ int main()
 						gui.updateButtons();
 						gui.checkTextBoxs();
 					}
-					componentManipulation.placeComponent(cameraPos, cameraDirection, componentTypeSelected);
+					else {
+						componentManipulation.placeComponent(cameraPos, cameraDirection, componentTypeSelected);
+					}
+				}
+
+				if (globals::input.keys.keyCounts["mouseMiddle"] == 1) {
+					if (!globals::input.inMenu) {
+						componentManipulation.switchButton(cameraPos, cameraDirection);
+					}
 				}
 
 				printf("x: %f, y: %f\n", globals::input.mousePosInWindow.x, globals::input.mousePosInWindow.y);
@@ -147,7 +163,7 @@ int main()
 						globals::input.inMenu = false;
 					} else{
 						globals::input.inMenu = true;
-						globals::input.clearInputString();
+						gui.loadMainMenu();
 					}
 				}
 				if (globals::input.inMenu) {
@@ -160,7 +176,7 @@ int main()
 			}
 			//globals::gfx.quickDrawPixelCoordinates(glm::vec3(0, 0, 0), glm::vec3(50, 50, 1), 98);
 			//globals::gfx.quickDrawPixelCoordinates(glm::vec3(5, 5, 0), glm::vec3(50, 50, 1), 98);
-			digitalLogic.runLogic();
+			//digitalLogic.runLogic();
 			digitalLogic.updateModels();
 			globals::gfx.run();
 		}
