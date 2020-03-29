@@ -166,6 +166,10 @@ public:
 
 	void drawCharacter(char _character, float _x, float _y, float _scale);
 
+	int getStringWidth(std::string _string, float _scale);
+
+	int getMaxCharactersInWidth(int _width, float _scale);
+
 	void quickDraw(glm::vec3 _position, int _modelIndex, bool _wireFrame = false);
 
 	void quickDrawPixelCoordinates(glm::vec3 _position, int _modelIndex, bool _wireFrame = false);
@@ -206,9 +210,9 @@ private:
 
 	std::vector<QuickDraw> quickDraws;
 
-	const int MAX_OBJECTS = 9900;
+	const int MAX_OBJECTS = 9800;
 
-	const int MAX_QUICKDRAWS = 100;
+	const int MAX_QUICKDRAWS = 200;
 
 	int sizeOfAllModels = 0;
 

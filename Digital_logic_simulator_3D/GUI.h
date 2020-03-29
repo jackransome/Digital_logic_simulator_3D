@@ -24,7 +24,7 @@ public:
 	bool EXIT;
 private:
 	void drawTextBox(Textbox _textBox);
-
+	void drawDisplayTextBox(int x, int y, int width, int height);
 	Buttons buttons;
 	LoadAndSaveWorkspace loadAndSaveWorkspace;
 	std::string currentFileName = "";

@@ -70,7 +70,12 @@ void GUI::updateTextBoxs(){
 void GUI::updateTextBox(Textbox* _textBox) {
 	if (_textBox->infocus) {
 		globals::input.stringInputEnabled = true;
+		//if the string can no longer fit in the textbox, truncate it
+		if (globals::input.inputString.size() > globals::gfx.getMaxCharactersInWidth(_textBox->size.x - 10 * 2, 0.5)) {
+			globals::input.inputString = globals::input.inputString.substr(0, globals::gfx.getMaxCharactersInWidth(_textBox->size.x - 10 * 2, 0.5));
+		}
 		_textBox->text = globals::input.inputString;
+
 	}
 	else {
 		globals::input.stringInputEnabled = false;
@@ -151,21 +156,43 @@ void GUI::drawGUI(){
 
 
 void GUI::drawTextBox(Textbox _textBox) {
+	int textPadding = 10;
 	if (_textBox.text == "") {
 		globals::gfx.quickDrawPixelCoordinates(glm::vec3(_textBox.position.x + _textBox.size.x / 2 - 637 / 4, _textBox.position.y + _textBox.size.y / 2 - 67 / 4, 0), glm::vec3(0.5, 0.5, 1), 22);
 		//drawFlatImage(_Textbox.position.x + _Textbox.size.x / 2 - 637 / 2, _Textbox.position.y + _Textbox.size.y / 2 - 67 / 2, 637, 67, glm::vec2(286, 749), glm::vec2(286 + 637, 749 + 67));
 	}
 	globals::gfx.drawString(_textBox.text, _textBox.position.x + _textBox.size.x / 2 - (_textBox.text.size() / 2) * 20, _textBox.position.y + _textBox.size.y / 2 - 55 / 4, 0.5);
 	//drawString(_textBox.text, glm::vec2(_textBox.position.x + _textBox.size.x / 2 - (_textBox.text.size() / 2) * 40, _textBox.position.y + _textBox.size.y / 2 - 55 / 2));
-	globals::gfx.quickDrawPixelCoordinates(glm::vec3(_textBox.position.x, _textBox.position.y, 0), glm::vec3(_textBox.size.x, _textBox.size.y, 1), 101);
+	globals::gfx.quickDrawPixelCoordinates(glm::vec3(_textBox.position.x + 4, _textBox.position.y + 4, 0), glm::vec3(_textBox.size.x - 8, _textBox.size.y - 8, 1), 101);
 	if (_textBox.infocus) {
-		globals::gfx.quickDrawPixelCoordinates(glm::vec3(_textBox.position.x - 4, _textBox.position.y - 4, 0), glm::vec3(_textBox.size.x + 8, _textBox.size.y + 8, 1), 100);
+		globals::gfx.quickDrawPixelCoordinates(glm::vec3(_textBox.position.x, _textBox.position.y, 0), glm::vec3(_textBox.size.x, _textBox.size.y, 1), 100);
 	}
 	else {
-		globals::gfx.quickDrawPixelCoordinates(glm::vec3(_textBox.position.x - 4, _textBox.position.y - 4, 0), glm::vec3(_textBox.size.x + 8, _textBox.size.y + 8, 1), 102);
+		globals::gfx.quickDrawPixelCoordinates(glm::vec3(_textBox.position.x, _textBox.position.y, 0), glm::vec3(_textBox.size.x, _textBox.size.y, 1), 102);
+	}
+	if (menuState == saveMenu || menuState == loadMenu) {
+		drawDisplayTextBox(450, -150, 400, 600);
 	}
 	
 	//drawRect(_textBox.position.x, _textBox.position.y, _textBox.size.x, _textBox.size.y, 1, 1, 1);
 	
 	//drawRect(_textBox.position.x - 8, _textBox.position.y - 8, _textBox.size.x + 16, _textBox.size.y + 16, 0, 0, 0);
+}
+
+void GUI::drawDisplayTextBox(int _x, int _y, int _width, int _height){
+	int textPadding = 10;
+	for (int i = 0; i < savedFiles.size(); i++) {
+		//if no more names can fit in the textbox
+		if ((i + 1) * 50 > _height) {
+			break;
+		}
+		if (savedFiles[i].size() > globals::gfx.getMaxCharactersInWidth(_width - textPadding * 2, 0.5)) {
+			globals::gfx.drawString(savedFiles[i].substr(0, globals::gfx.getMaxCharactersInWidth(_width - textPadding * 2, 0.5)-3) + "...", _x + 4 + textPadding, _y + 4 + textPadding + i * 50, 0.5);
+		}
+		else {
+			globals::gfx.drawString(savedFiles[i], _x + 4 + textPadding, _y + 4 + textPadding + i * 50, 0.5);
+		}
+	}
+	globals::gfx.quickDrawPixelCoordinates(glm::vec3(_x + 4, _y + 4, 0), glm::vec3(_width - 8, _height - 8, 1), 101);
+	globals::gfx.quickDrawPixelCoordinates(glm::vec3(_x, _y, 0), glm::vec3(_width, _height, 1), 100);
 }

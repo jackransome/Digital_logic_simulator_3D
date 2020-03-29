@@ -2053,7 +2053,7 @@ GLFWwindow* Graphics::getWindowPointer() {
 
 void Graphics::drawString(std::string _string, float _x, float _y, float _scale){
 	for (int i = 0; i < _string.size(); i++) {
-		drawCharacter(_string[i], _x + i * 40*_scale, _y, _scale);
+		drawCharacter(_string[i], _x + i * 40 * _scale, _y, _scale);
 	}
 }
 
@@ -2078,6 +2078,15 @@ void Graphics::drawCharacter(char _character, float _x, float _y, float _scale) 
 	else return;
 	//coordinates x and y as parameters end up being pixel values instead of 1,1 being one corner of the screen and -1,-1 being the other
 	quickDrawPixelCoordinates(glm::vec3(_x, _y, 0), glm::vec3(_scale, _scale, 1), 27 + characterNumber);
+}
+
+int Graphics::getStringWidth(std::string _string, float _scale){
+	return _scale * (40 * _string.size() + 33);
+}
+
+int Graphics::getMaxCharactersInWidth(int _width, float _scale)
+{
+	return floor(((_width / _scale) - 33) / 40);
 }
 
 void Graphics::quickDraw(glm::vec3 position, int modelIndex, bool wireFrame){
