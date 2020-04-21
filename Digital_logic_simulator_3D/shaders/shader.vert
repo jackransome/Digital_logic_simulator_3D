@@ -41,13 +41,14 @@ void main() {
 	} else {
 		//applying the view matrix, projection matrix, and object matrix to the point
 		gl_Position = ubo.proj * ubo.view * objects.transform[object.index] * vec4(inPosition, 1.0);
+		Normal = mat3(transpose(inverse(objects.transform[object.index]))) * inNormal;
 	}
 
     fragColor = inColor;
 
 	FragPos = vec3(objects.transform[object.index] * vec4(inPosition, 1.0));
 
-    Normal = mat3(transpose(inverse(objects.transform[object.index]))) * inNormal;
+    
 
 	cameraPos = ubo.cameraPos;
 

@@ -1609,8 +1609,6 @@ void Graphics::drawFrame() {
 	else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
 		throw std::runtime_error("failed to acquire swap chain image!");
 	}
-
-	objects[0].transformData = glm::translate(glm::mat4(1.0f), cameraPosition);
 	updateUniformBuffer(imageIndex);
 	updateStorageBuffer();
 	createCommandBuffers();
@@ -1912,7 +1910,8 @@ void Graphics::loadModels()
 }
 
 void Graphics::loadObjects() {
-	addObject(glm::vec3(0,0,0), glm::vec3(1,1,1), 3);
+	//the center sphere
+	addObject(glm::vec3(0,0,0), glm::vec3(0,0,0), 1);
 }
 
 //loads a rectangle with a texture mapped to it into vertices/indices starting at 0,0 extending to width,height and creates a usable model struct for it
@@ -2012,6 +2011,7 @@ void Graphics::loadFlatImageModels(){
 	loadFlatColourModel(1, 1, glm::vec4(0, 0, 0, 1)); // black square : 100
 	loadFlatColourModel(1, 1, glm::vec4(1, 1, 1, 1)); // white square : 101
 	loadFlatColourModel(1, 1, glm::vec4(0.5, 0.5, 0.5, 1)); // grey square : 102
+	loadFlatColourModel(1, 1, glm::vec4(0, 1, 0, 1)); // green square : 103
 }
 
 void Graphics::setUpCamera() {
@@ -2222,11 +2222,13 @@ void Graphics::recalculateObjectMatrix(int objectIndex) {
 	glm::mat4 yRotation = glm::inverse(glm::rotate(glm::mat4(1.0f), -objects[objectIndex].rotation.y, glm::vec3(0, 1, 0)));
 	//z axis rotation:
 	glm::mat4 zRotation = glm::inverse(glm::rotate(glm::mat4(1.0f), -objects[objectIndex].rotation.z, glm::vec3(0, 0, 1)));
+	//scaling:
+	glm::mat4 scale = glm::scale(glm::mat4(1.0f), objects[objectIndex].scale);
 	//reset tranform:
 	glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5));
 	//position tranform:
 	glm::mat4 transform3 = glm::translate(glm::mat4(1.0f), objects[objectIndex].position);
-	objects[objectIndex].transformData = transform3 * transform2 * zRotation * yRotation * xRotation * transform1;
+	objects[objectIndex].transformData = transform3 * transform2 * scale * zRotation * yRotation * xRotation * transform1;
 }
 
 void Graphics::calculateQuickDrawMatrix(int quickDrawIndex) {
