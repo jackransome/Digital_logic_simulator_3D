@@ -1889,23 +1889,23 @@ void Graphics::loadModels()
 	loadModel("models/small_sphere.obj", glm::vec4(0.7, 0.9, 0.1, 1), glm::vec3(1)); // : 3
 	loadModel("models/testUV.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // : 4
 
-	loadModel("models/box.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // : 5
-	loadModel("models/button_off.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // button off : 6
-	loadModel("models/button_on.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // button on : 7
-	loadModel("models/inverter.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // inverter off : 8
-	loadModel("models/inverter.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // inverter on : 9
-	loadModel("models/andGate.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); //andGate off : 10
-	loadModel("models/andGate.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); //andGate on : 11
-	loadModel("models/orGate.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // orGate off : 12
-	loadModel("models/orGate.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // orGate on : 13
-	loadModel("models/wire.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // wire off : 14
-	loadModel("models/wire.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // wire on : 15
-	loadModel("models/wire_center.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // wireCenter off : 16
-	loadModel("models/wire_center.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // wireCenter on : 17
-	loadModel("models/XorGate.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // XorGate off : 18
-	loadModel("models/XorGate.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // XorGate on : 19
-	loadModel("models/box.obj", glm::vec4(0.2, 0.2, 0.2, 1), glm::vec3(1, 1, 1)); // LED off : 20
-	loadModel("models/box.obj", glm::vec4(0.7, 0.7, 0.7, 1), glm::vec3(1, 1, 1)); // LED on : 21
+	loadModel("models/box.obj", glm::vec4(0.5, 0.5, 0.5, 1), glm::vec3(1, 1, 1)); // : 5
+	loadModel("models/button_off.obj", glm::vec4(0.1, 0.9, 0.1, 1), glm::vec3(1, 1, 1)); // button off : 6
+	loadModel("models/button_on.obj", glm::vec4(0.1, 0.9, 0.1, 1) + glm::vec4(0.6, 0.6, 0.6, 1), glm::vec3(1, 1, 1)); // button on : 7
+	loadModel("models/inverter.obj", glm::vec4(0.5, 0.5, 0.9, 1), glm::vec3(1, 1, 1)); // inverter off : 8
+	loadModel("models/inverter.obj", glm::vec4(0.5, 0.5, 0.9, 1) + glm::vec4(0.6, 0.6, 0.6, 1), glm::vec3(1, 1, 1)); // inverter on : 9
+	loadModel("models/andGate.obj", glm::vec4(0.5, 0.5, 0.9, 1), glm::vec3(1, 1, 1)); //andGate off : 10
+	loadModel("models/andGate.obj", glm::vec4(0.5, 0.5, 0.9, 1) + glm::vec4(0.6, 0.6, 0.6, 1), glm::vec3(1, 1, 1)); //andGate on : 11
+	loadModel("models/orGate.obj", glm::vec4(0.5, 0.5, 0.9, 1), glm::vec3(1, 1, 1)); // orGate off : 12
+	loadModel("models/orGate.obj", glm::vec4(0.5, 0.5, 0.9, 1) + glm::vec4(0.6, 0.6, 0.6, 1), glm::vec3(1, 1, 1)); // orGate on : 13
+	loadModel("models/wire.obj", glm::vec4(0.7, 0, 0, 1), glm::vec3(1, 1, 1)); // wire off : 14
+	loadModel("models/wire.obj", glm::vec4(0.7, 0, 0, 1), glm::vec3(1, 1, 1)); // wire on : 15
+	loadModel("models/wire_center.obj", glm::vec4(0.7, 0, 0, 1), glm::vec3(1, 1, 1)); // wireCenter off : 16
+	loadModel("models/wire_center.obj", glm::vec4(0.7, 0, 0, 1) + glm::vec4(0.6, 0.6, 0.6, 1), glm::vec3(1, 1, 1)); // wireCenter on : 17
+	loadModel("models/XorGate.obj", glm::vec4(0.5, 0.5, 0.9, 1), glm::vec3(1, 1, 1)); // XorGate off : 18
+	loadModel("models/XorGate.obj", glm::vec4(0.5, 0.5, 0.9, 1) + glm::vec4(0.6, 0.6, 0.6, 1), glm::vec3(1, 1, 1)); // XorGate on : 19
+	loadModel("models/box.obj", glm::vec4(0.5, 0.5, 0.5, 1), glm::vec3(1, 1, 1)); // LED off : 20
+	loadModel("models/box.obj", glm::vec4(0.5, 0.5, 0.5, 1) + glm::vec4(0.6, 0.6, 0.6, 1), glm::vec3(1, 1, 1)); // LED on : 21
 
 }
 
