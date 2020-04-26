@@ -156,7 +156,7 @@ int main()
 					}
 				}
 
-				printf("x: %f, y: %f\n", globals::input.mousePosInWindow.x, globals::input.mousePosInWindow.y);
+				//printf("x: %f, y: %f\n", globals::input.mousePosInWindow.x, globals::input.mousePosInWindow.y);
 
 				if (globals::input.keys.keyCounts["escape"] == 1) {
 					if (globals::input.inMenu) {

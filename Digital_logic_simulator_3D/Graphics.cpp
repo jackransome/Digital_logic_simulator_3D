@@ -1232,7 +1232,7 @@ void Graphics::createStorageBuffer() {
 
 
 	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) *  (objects.size() + quickDraws.size());
-	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * MAX_OBJECTS;
+	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * (MAX_OBJECTS + MAX_QUICKDRAWS);
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
@@ -1270,7 +1270,7 @@ void Graphics::updateStorageBuffer() {
 
 
 	VkDeviceSize bufferSize = sizeof(storageBufferData[0]) *  (objects.size() + quickDraws.size());
-	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * MAX_OBJECTS;
+	VkDeviceSize maxBufferSize = sizeof(storageBufferData[0]) * (MAX_OBJECTS + MAX_QUICKDRAWS);
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
@@ -1340,7 +1340,7 @@ void Graphics::createDescriptorSets() {
 		VkDescriptorBufferInfo ssboInfo = {};
 		ssboInfo.buffer = storageBuffer;
 		ssboInfo.offset = 0;
-		ssboInfo.range = sizeof(glm::mat4)*MAX_OBJECTS;
+		ssboInfo.range = sizeof(glm::mat4)*(MAX_OBJECTS + MAX_QUICKDRAWS);
 
 		VkDescriptorImageInfo imageInfo = {};
 		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
@@ -1509,10 +1509,12 @@ void Graphics::createCommandBuffers() {
 
 		vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
 		for (int j = 0; j < objects.size(); j++) {
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, objects[j].wireFrame ? lineGraphicsPipeline : triangleGraphicsPipeline);
+			if (objects[j].relevant) {
+				vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, objects[j].wireFrame ? lineGraphicsPipeline : triangleGraphicsPipeline);
 
-			vkCmdPushConstants(commandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(int), (void*)&j);
-			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(objects[j].model->size), 1, static_cast<uint32_t>(objects[j].model->offset), 0, 0);
+				vkCmdPushConstants(commandBuffers[i], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(int), (void*)&j);
+				vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(objects[j].model->size), 1, static_cast<uint32_t>(objects[j].model->offset), 0, 0);
+			}
 		}
 
 		// drawing all the quickDraw calls (eg, as menu elements are not actually objects, instead we draw them using quickDraw, this avoids the object overhead and persistance issues [especially problematic for text])

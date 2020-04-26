@@ -10,7 +10,7 @@ layout(binding = 0) uniform UniformBufferObject {
 
 layout(binding=2,set=0)buffer TRANSFORM_DATA
 {
-  mat4 transform[10000];
+  mat4 transform[12000];
 } objects;
 
 layout(location = 0) in vec3 inPosition;

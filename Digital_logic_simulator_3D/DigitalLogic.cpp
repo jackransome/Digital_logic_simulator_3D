@@ -456,7 +456,7 @@ void DigitalLogic::runLogic()
 }
 
 void DigitalLogic::clearComponents(){
-	for (int i = 0; i < components.size(); i++) {
+	for (int i = components.size() - 1; i >= 0; i--) {
 		removeComponent(i);
 	}
 }

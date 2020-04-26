@@ -14,6 +14,8 @@ void LoadAndSaveWorkspace::loadWorkSpace(DigitalLogic* _digitalLogic, std::strin
 		std::cout << "file " << _xmlPath << " not found" << std::endl;
 		return;
 	}
+	//clear current workspace:
+	//_digitalLogic->clearComponents();
 	//loading the xml file
 	xmlFile.LoadFile(("savedWorkspaces/" + _xmlPath + ".xml").c_str());
 	//using tinyXML to parse the xml data to find the number of blocks saved
