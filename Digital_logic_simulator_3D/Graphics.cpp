@@ -1899,7 +1899,7 @@ void Graphics::loadModels()
 	loadModel("models/orGate.obj", glm::vec4(0.5, 0.5, 0.9, 1), glm::vec3(1, 1, 1)); // orGate off : 12
 	loadModel("models/orGate.obj", glm::vec4(0.5, 0.5, 0.9, 1) + glm::vec4(0.6, 0.6, 0.6, 1), glm::vec3(1, 1, 1)); // orGate on : 13
 	loadModel("models/wire.obj", glm::vec4(0.7, 0, 0, 1), glm::vec3(1, 1, 1)); // wire off : 14
-	loadModel("models/wire.obj", glm::vec4(0.7, 0, 0, 1), glm::vec3(1, 1, 1)); // wire on : 15
+	loadModel("models/wire.obj", glm::vec4(0.7, 0, 0, 1) + glm::vec4(0.6, 0.6, 0.6, 1), glm::vec3(1, 1, 1)); // wire on : 15
 	loadModel("models/wire_center.obj", glm::vec4(0.7, 0, 0, 1), glm::vec3(1, 1, 1)); // wireCenter off : 16
 	loadModel("models/wire_center.obj", glm::vec4(0.7, 0, 0, 1) + glm::vec4(0.6, 0.6, 0.6, 1), glm::vec3(1, 1, 1)); // wireCenter on : 17
 	loadModel("models/XorGate.obj", glm::vec4(0.5, 0.5, 0.9, 1), glm::vec3(1, 1, 1)); // XorGate off : 18

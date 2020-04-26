@@ -38,6 +38,7 @@ void main() {
 	if (inNormal == vec3(0,0,0)){
 		//for menu elements and other things that need to be drawn falt on the screen without the projection matrix
 		gl_Position = objects.transform[object.index] * vec4(inPosition, 1.0);
+		Normal = inNormal;
 	} else {
 		//applying the view matrix, projection matrix, and object matrix to the point
 		gl_Position = ubo.proj * ubo.view * objects.transform[object.index] * vec4(inPosition, 1.0);
