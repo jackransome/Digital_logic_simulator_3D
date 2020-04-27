@@ -42,7 +42,7 @@ int main()
 
 		//the green origin model
 		globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 2);
-
+		glm::vec3 cameraDirection;
 		while (!globals::gfx.shouldClose && !gui.EXIT) {
 			auto newTime = time_point_cast<us>(Time::now());
 			auto frameTime = duration_cast<us>(newTime - currentTime).count();
@@ -54,9 +54,8 @@ int main()
 			{
 				globals::gfx.setCameraAngle(globals::input.cameraAngle);
 				globals::input.run();
-				digitalLogic.runLogic();
 				globals::gfx.setCameraPos(cameraPos);
-				glm::vec3 cameraDirection = glm::vec3(
+				cameraDirection = glm::vec3(
 					cos(globals::input.cameraAngle.y) * sin(globals::input.cameraAngle.x),
 					sin(globals::input.cameraAngle.y),
 					cos(globals::input.cameraAngle.y) * cos(globals::input.cameraAngle.x)
@@ -156,7 +155,7 @@ int main()
 					}
 				}
 
-				//printf("x: %f, y: %f\n", globals::input.mousePosInWindow.x, globals::input.mousePosInWindow.y);
+				printf("x: %f, y: %f\n", globals::input.mousePosInWindow.x, globals::input.mousePosInWindow.y);
 
 				if (globals::input.keys.keyCounts["escape"] == 1) {
 					if (globals::input.inMenu) {
@@ -174,13 +173,14 @@ int main()
 			if (globals::input.inMenu) {
 				gui.drawGUI();
 			}
+			globals::gfx.quickDraw(componentManipulation.getNewComponentLocation(cameraPos, cameraDirection), 20, true);
 			//draw crosshairs:
 			globals::gfx.quickDrawPixelCoordinates(glm::vec3(-10, -1, 0), glm::vec3(20, 2, 0), 103);
 			globals::gfx.quickDrawPixelCoordinates(glm::vec3(-1, -10, 0), glm::vec3(2, 20, 0), 103);
 			//globals::gfx.quickDrawPixelCoordinates(glm::vec3(5, 5, 0), glm::vec3(50, 50, 1), 98);
 			//globals::gfx.quickDrawPixelCoordinates(glm::vec3(0, 0, 0), glm::vec3(50, 50, 1), 98);
 			//globals::gfx.quickDrawPixelCoordinates(glm::vec3(5, 5, 0), glm::vec3(50, 50, 1), 98);
-			//digitalLogic.runLogic();
+			digitalLogic.runLogic();
 			digitalLogic.updateModels();
 			globals::gfx.run();
 		}

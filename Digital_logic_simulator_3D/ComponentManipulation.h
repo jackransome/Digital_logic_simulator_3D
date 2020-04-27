@@ -13,6 +13,7 @@ public:
 	glm::vec3 getSelectedComponent(glm::vec3 _cameraPosition, glm::vec3 _cameraDirection);
 	int getSide(glm::vec3 _component, glm::vec3 _cameraPosition, glm::vec3 _cameraDirection);
 	void switchButton(glm::vec3 _cameraPosition, glm::vec3 _cameraDirection);
+	glm::vec3 getNewComponentLocation(glm::vec3 _cameraPosition, glm::vec3 _cameraDirection);
 
 private:
 	glm::vec3 getLineFaceIntersect(glm::vec3 _min, glm::vec3 _max, glm::vec3 _origin, glm::vec3 _direction, int _orientation);

@@ -167,3 +167,38 @@ void ComponentManipulation::switchButton(glm::vec3 _cameraPosition, glm::vec3 _c
 		}
 	}
 }
+
+glm::vec3 ComponentManipulation::getNewComponentLocation(glm::vec3 _cameraPosition, glm::vec3 _cameraDirection){
+	glm::vec3 component = getSelectedComponent(_cameraPosition, _cameraDirection);
+	int face = getSide(component, _cameraPosition, _cameraDirection);
+	//FACES:
+	//top XZ: 0
+	//bottom XZ: 1
+	//back ZY: 2
+	//front ZY: 3
+	//back XY: 4
+	//front XY: 5
+	if (component == nullComponent) {
+		return glm::vec3(-1000000, -1000000, -1000000);
+	}
+	switch (face) {
+	case 0:
+		return component + glm::vec3(0, 1, 0);
+		break;
+	case 1:
+		return component + glm::vec3(0, -1, 0);
+		break;
+	case 2:
+		return component + glm::vec3(1, 0, 0);
+		break;
+	case 3:
+		return component + glm::vec3(-1, 0, 0);
+		break;
+	case 4:
+		return component + glm::vec3(0, 0, 1);
+		break;
+	case 5:
+		return component + glm::vec3(0, 0, -1);
+		break;
+	}
+}
