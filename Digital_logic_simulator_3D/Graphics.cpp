@@ -2069,7 +2069,7 @@ void Graphics::drawCharacter(char _character, float _x, float _y, float _scale) 
 	else if (_character >= 65 && _character <= 90) {
 		characterNumber = _character - 65 + 26;
 	}
-	//for uppercase:
+	//for numbers:
 	else if (_character >= 48 && _character <= 57) {
 		characterNumber = _character - 48 + 52;
 	}

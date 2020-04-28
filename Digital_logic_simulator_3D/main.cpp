@@ -177,9 +177,6 @@ int main()
 			//draw crosshairs:
 			globals::gfx.quickDrawPixelCoordinates(glm::vec3(-10, -1, 0), glm::vec3(20, 2, 0), 103);
 			globals::gfx.quickDrawPixelCoordinates(glm::vec3(-1, -10, 0), glm::vec3(2, 20, 0), 103);
-			//globals::gfx.quickDrawPixelCoordinates(glm::vec3(5, 5, 0), glm::vec3(50, 50, 1), 98);
-			//globals::gfx.quickDrawPixelCoordinates(glm::vec3(0, 0, 0), glm::vec3(50, 50, 1), 98);
-			//globals::gfx.quickDrawPixelCoordinates(glm::vec3(5, 5, 0), glm::vec3(50, 50, 1), 98);
 			digitalLogic.runLogic();
 			digitalLogic.updateModels();
 			globals::gfx.run();
