@@ -1920,8 +1920,8 @@ void Graphics::loadObjects() {
 void Graphics::loadFlatImageModel(float _width, float _height, glm::vec2 _imageMin, glm::vec2 _imageMax){
 
 	// loading the vertices and indices into the vectors
-	_width /= swapChainExtent.width / 2;
-	_height /= swapChainExtent.height / 2;
+	//_width /= swapChainExtent.width / 2;
+	//_height /= swapChainExtent.height / 2;
 	_imageMin.x /= TextureWidth;
 	_imageMin.y /= TextureHeight;
 	_imageMax.x /= TextureWidth;
@@ -1960,8 +1960,8 @@ void Graphics::loadFlatImageModel(float _width, float _height, glm::vec2 _imageM
 void Graphics::loadFlatColourModel(float _width, float _height, glm::vec4 _colour) {
 
 	// loading the vertices and indices into the vectors
-	_width /= swapChainExtent.width / 2;
-	_height /= swapChainExtent.height / 2;
+	//_width /= swapChainExtent.width / 2;
+	//_height /= swapChainExtent.height / 2;
 	Vertex temp = {};
 	// negative texCoord means no texture
 	temp.texCoord = glm::vec2(-100, -100);
@@ -2104,23 +2104,14 @@ void Graphics::quickDraw(glm::vec3 position, int modelIndex, bool wireFrame){
 }
 
 void Graphics::quickDrawPixelCoordinates(glm::vec3 _position, int _modelIndex, bool _wireFrame) {
-	_position.x /= (swapChainExtent.width/2);
-	_position.y /= (swapChainExtent.height/2);
-	if (quickDraws.size() < MAX_QUICKDRAWS) {
-		quickDraws.push_back(QuickDraw());
-		quickDraws[quickDraws.size() - 1].model = &models[_modelIndex];
-		quickDraws[quickDraws.size() - 1].position = _position;
-		quickDraws[quickDraws.size() - 1].scale = glm::vec3(1,1,1);
-		quickDraws[quickDraws.size() - 1].wireFrame = _wireFrame;
-	}
-	else {
-		std::cout << "Error, max quickdraws reached" << std::endl;
-	}
+	quickDrawPixelCoordinates(_position, glm::vec3(1, 1, 1), _modelIndex, _wireFrame);
 }
 
 void Graphics::quickDrawPixelCoordinates(glm::vec3 _position, glm::vec3 _scale, int _modelIndex, bool _wireFrame) {
 	_position.x /= (swapChainExtent.width / 2);
 	_position.y /= (swapChainExtent.height / 2);
+	_scale.x /= (swapChainExtent.width / 2);
+	_scale.y /= (swapChainExtent.height / 2);
 	if (quickDraws.size() < MAX_QUICKDRAWS) {
 		quickDraws.push_back(QuickDraw());
 		quickDraws[quickDraws.size() - 1].model = &models[_modelIndex];

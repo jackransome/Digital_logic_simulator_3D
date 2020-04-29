@@ -221,7 +221,7 @@ private:
 	const int TextureHeight = 2000;
 
 	const int WIDTH = 1920;
-	const int HEIGHT = 1080;
+	const int HEIGHT = 1200;
 	const int MAX_FRAMES_IN_FLIGHT = 2;
 
 	bool freeLook = false;

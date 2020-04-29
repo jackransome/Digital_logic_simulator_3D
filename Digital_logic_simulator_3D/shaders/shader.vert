@@ -49,8 +49,6 @@ void main() {
 
 	FragPos = vec3(objects.transform[object.index] * vec4(inPosition, 1.0));
 
-    
-
 	cameraPos = ubo.cameraPos;
 
     fragTexCoord = inTexCoord;
