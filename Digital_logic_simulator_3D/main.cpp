@@ -155,7 +155,8 @@ int main()
 					}
 				}
 
-				printf("x: %f, y: %f\n", globals::input.mousePosInWindow.x, globals::input.mousePosInWindow.y);
+				//mouse pos printing
+				//printf("x: %f, y: %f\n", globals::input.mousePosInWindow.x, globals::input.mousePosInWindow.y);
 
 				if (globals::input.keys.keyCounts["escape"] == 1) {
 					if (globals::input.inMenu) {
@@ -170,9 +171,8 @@ int main()
 				}
 				accumulator -= globals::dt;
 			}
-			if (globals::input.inMenu) {
-				gui.drawGUI();
-			}
+			gui.drawGUI(componentTypeSelected);
+
 			globals::gfx.quickDraw(componentManipulation.getNewComponentLocation(cameraPos, cameraDirection), 20, true);
 			//draw crosshairs:
 			globals::gfx.quickDrawPixelCoordinates(glm::vec3(-10, -1, 0), glm::vec3(20, 2, 0), 103);

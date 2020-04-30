@@ -128,30 +128,57 @@ void GUI::loadHelpMenu() {
 	buttons.addButton(99, glm::vec2(-200, 0), glm::vec2(40, 100), mainMenuCommand);
 }
 
-void GUI::drawGUI(){
-	//headers
-	switch (menuState) {
-	case mainMenu:
-		globals::gfx.quickDrawPixelCoordinates(glm::vec3(0 - 1940 / 4, -450, 0), glm::vec3(0.5, 0.5, 1), 23);
-		break;
-	case saveMenu:
-		globals::gfx.quickDrawPixelCoordinates(glm::vec3(0 - 1940 / 4, -450, 0), glm::vec3(0.5, 0.5, 1), 24);
-		break;
-	case loadMenu:
-		globals::gfx.quickDrawPixelCoordinates(glm::vec3(0 - 1940 / 4, -450, 0), glm::vec3(0.5, 0.5, 1), 25);
-		break;
-	case helpMenu:
-		globals::gfx.quickDrawPixelCoordinates(glm::vec3(-1596/4, -1308/4, 0), glm::vec3(0.5, 0.5, 1), 26);
-		break;
+void GUI::drawGUI(componentType _componentTypeSelected){
+	if (globals::input.inMenu) {
+		//headers
+		switch (menuState) {
+		case mainMenu:
+			globals::gfx.quickDrawPixelCoordinates(glm::vec3(0 - 1940 / 4, -450, 0), glm::vec3(0.5, 0.5, 1), 23);
+			break;
+		case saveMenu:
+			globals::gfx.quickDrawPixelCoordinates(glm::vec3(0 - 1940 / 4, -450, 0), glm::vec3(0.5, 0.5, 1), 24);
+			break;
+		case loadMenu:
+			globals::gfx.quickDrawPixelCoordinates(glm::vec3(0 - 1940 / 4, -450, 0), glm::vec3(0.5, 0.5, 1), 25);
+			break;
+		case helpMenu:
+			globals::gfx.quickDrawPixelCoordinates(glm::vec3(-1596 / 4, -1308 / 4, 0), glm::vec3(0.5, 0.5, 1), 26);
+			break;
+		}
+		//buttons
+		for (int i = 0; i < buttons.buttons.size(); i++) {
+			globals::gfx.quickDrawPixelCoordinates(glm::vec3(buttons.buttons[i]->position.x, buttons.buttons[i]->position.y, 0), glm::vec3(0.5, 0.5, 1), buttons.buttons[i]->modelIndex);
+		}
+		//textBox:
+		for (int i = 0; i < textBoxs.size(); i++) {
+			drawTextBox(textBoxs[i]);
+		}
 	}
-	//buttons
-	for (int i = 0; i < buttons.buttons.size(); i++) {
-		globals::gfx.quickDrawPixelCoordinates(glm::vec3(buttons.buttons[i]->position.x, buttons.buttons[i]->position.y, 0), glm::vec3(0.5, 0.5, 1), buttons.buttons[i]->modelIndex);
+	drawHotbar(_componentTypeSelected);
+}
+
+void GUI::drawHotbar(componentType _componentTypeSelected){
+	int numberOfBoxes = 7;
+	int sizeOfBoxes = 100;
+	int spaceBetweenBoxes = 10;
+	int width = numberOfBoxes * (sizeOfBoxes+spaceBetweenBoxes) + spaceBetweenBoxes;
+	int height = sizeOfBoxes + spaceBetweenBoxes * 2;
+	int bottomPadding = 50;
+	int border = 4;
+	for (int i = 0; i < numberOfBoxes; i++) {
+		globals::gfx.quickDrawPixelCoordinates(glm::vec3(-width / 2 + spaceBetweenBoxes + i * (sizeOfBoxes + spaceBetweenBoxes) + 10, globals::gfx.getSwapChainExtent().y / 2 - height - bottomPadding + spaceBetweenBoxes + 10, 0), glm::vec3(1, 1, 1), 104 + i);
+		if (_componentTypeSelected == i) {
+			globals::gfx.quickDrawPixelCoordinates(glm::vec3(-width / 2 + spaceBetweenBoxes + i * (sizeOfBoxes + spaceBetweenBoxes), globals::gfx.getSwapChainExtent().y / 2 - height - bottomPadding + spaceBetweenBoxes, 0), glm::vec3(sizeOfBoxes, sizeOfBoxes, 1), 100);
+		}
+		else {
+			globals::gfx.quickDrawPixelCoordinates(glm::vec3(-width / 2 + spaceBetweenBoxes + i * (sizeOfBoxes + spaceBetweenBoxes), globals::gfx.getSwapChainExtent().y / 2 - height - bottomPadding + spaceBetweenBoxes, 0), glm::vec3(sizeOfBoxes, sizeOfBoxes, 1), 102);
+		}
+		
 	}
-	//textBox:
-	for (int i = 0; i < textBoxs.size(); i++) {
-		drawTextBox(textBoxs[i]);
-	}
+	globals::gfx.quickDrawPixelCoordinates(glm::vec3(-width / 2 + border, globals::gfx.getSwapChainExtent().y / 2 - height - bottomPadding + border, 0), glm::vec3(width - border * 2, height - border * 2, 1), 101);
+	globals::gfx.quickDrawPixelCoordinates(glm::vec3(-width / 2, globals::gfx.getSwapChainExtent().y / 2 - height - bottomPadding, 0), glm::vec3(width, height, 1), 100);
+
+	
 }
 
 

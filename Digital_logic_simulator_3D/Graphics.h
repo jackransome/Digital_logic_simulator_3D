@@ -201,6 +201,7 @@ public:
 	void setObjectsWireFrame(bool value);
 
 	void setObjectVisible(int objectIndex, bool visible);
+	glm::vec2 getSwapChainExtent();
 
 private:
 
@@ -221,7 +222,7 @@ private:
 	const int TextureHeight = 2000;
 
 	const int WIDTH = 1920;
-	const int HEIGHT = 1200;
+	const int HEIGHT = 1080;
 	const int MAX_FRAMES_IN_FLIGHT = 2;
 
 	bool freeLook = false;

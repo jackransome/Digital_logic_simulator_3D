@@ -19,7 +19,8 @@ public:
 	void loadLoadMenu();
 	void loadSaveMenu();
 	void loadHelpMenu();
-	void drawGUI();
+	void drawGUI(componentType _componentTypeSelected);
+	void drawHotbar(componentType _componentTypeSelected);
 
 	bool EXIT;
 private:

@@ -1579,7 +1579,7 @@ void Graphics::updateUniformBuffer(uint32_t currentImage) {
 	
 	ubo.proj = glm::perspective(glm::radians(FOV), swapChainExtent.width / (float)swapChainExtent.height, 0.001f, 1000.0f);
 	ubo.proj[1][1] *= -1;
-	ubo.cameraPos = cameraPosition;
+	ubo.cameraPos = cameraPosition - direction * zoom;
 	//static auto startTime = std::chrono::high_resolution_clock::now();
 
 	//auto currentTime = std::chrono::high_resolution_clock::now();
@@ -2014,6 +2014,14 @@ void Graphics::loadFlatImageModels(){
 	loadFlatColourModel(1, 1, glm::vec4(1, 1, 1, 1)); // white square : 101
 	loadFlatColourModel(1, 1, glm::vec4(0.5, 0.5, 0.5, 1)); // grey square : 102
 	loadFlatColourModel(1, 1, glm::vec4(0, 1, 0, 1)); // green square : 103
+	//
+	loadFlatImageModel(80, 80, glm::vec2(1600, 0), glm::vec2(1680, 80)); // wire image : 104
+	loadFlatImageModel(80, 80, glm::vec2(1600 + 80, 0), glm::vec2(1600 + 80 * 2, 80)); // inverter image : 105
+	loadFlatImageModel(80, 80, glm::vec2(1600 + 80 * 2, 0), glm::vec2(1600 + 80 * 3, 80)); // and image : 106
+	loadFlatImageModel(80, 80, glm::vec2(1600 + 80 * 3, 0), glm::vec2(1600 + 80 * 4, 80)); // or image : 107
+	loadFlatImageModel(80, 80, glm::vec2(1600 + 80 * 4, 0), glm::vec2(1600 + 80 * 5, 80)); // xor image : 108
+	loadFlatImageModel(80, 80, glm::vec2(1600 + 80 * 5, 0), glm::vec2(1600 + 80 * 6, 80)); // led image : 109
+	loadFlatImageModel(80, 80, glm::vec2(1600 + 80 * 6, 0), glm::vec2(1600 + 80 * 7, 80)); // button image : 110
 }
 
 void Graphics::setUpCamera() {
@@ -2259,6 +2267,11 @@ void Graphics::setObjectVisible(int objectIndex, bool visible) {
 		std::cout << "Error: object index out of range\n";
 	}
 	
+}
+
+glm::vec2 Graphics::getSwapChainExtent()
+{
+	return glm::vec2(swapChainExtent.width, swapChainExtent.height);
 }
 
 void Graphics::clearStorageBuffer() {
