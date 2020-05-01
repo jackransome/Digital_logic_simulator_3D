@@ -93,10 +93,10 @@ glm::vec3 ComponentManipulation::getLineFaceIntersect(glm::vec3 min, glm::vec3 m
 		break;
 	default:
 		std::cout << "No valid orientation passed in" << std::endl;
-		return glm::vec3(NULL, NULL, NULL);
+		return nullIntersection;
 		break;
 	}
-	return glm::vec3(NULL, NULL, NULL);
+	return nullIntersection;
 }
 
 int ComponentManipulation::getSide(glm::vec3 _component, glm::vec3 _cameraPosition, glm::vec3 _cameraDirection){
@@ -129,7 +129,7 @@ int ComponentManipulation::getSide(glm::vec3 _component, glm::vec3 _cameraPositi
 	int smallestDistanceIndex = 0;
 	float smallestDistance = 1000000000;
 	for (int i = 0; i < intersections.size(); i++) {
-		if (intersections[i].x != NULL) {
+		if (intersections[i] != nullIntersection) {
 			float temp = get3DDistance(_cameraPosition, intersections[i]);
 			if (temp < smallestDistance && temp != NULL) {
 				smallestDistance = temp;
@@ -139,6 +139,7 @@ int ComponentManipulation::getSide(glm::vec3 _component, glm::vec3 _cameraPositi
 	}
 	if (smallestDistance == 1000000000) {
 		return NULL;
+		std::cout << "No side intersection found" << std::endl;
 	}
 	return smallestDistanceIndex;
 	//top XZ: 0
@@ -150,7 +151,7 @@ int ComponentManipulation::getSide(glm::vec3 _component, glm::vec3 _cameraPositi
 }
 
 float ComponentManipulation::get3DDistance(glm::vec3 _p1, glm::vec3 _p2) {
-	if (_p1 == glm::vec3(NULL, NULL, NULL) || _p2 == glm::vec3(NULL, NULL, NULL)) {
+	if (_p1 == nullIntersection || _p2 == nullIntersection) {
 		return NULL;
 	}
 	return sqrt(pow((_p1.x - _p2.x), 2) + pow((_p1.y - _p2.y), 2) + pow((_p1.z - _p2.z), 2));
