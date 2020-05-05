@@ -319,6 +319,8 @@ private:
 
 	void loadFlatImageModels();
 
+	void loadGrid();
+
 	void loadObjects();
 
 	void setUpCamera();

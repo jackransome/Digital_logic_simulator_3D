@@ -41,7 +41,9 @@ int main()
 		componentType componentTypeSelected = wire;
 
 		//the green origin model
-		globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 2);
+		//globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 2);
+		//grid
+		globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 111, true);
 		glm::vec3 cameraDirection;
 		while (!globals::gfx.shouldClose && !gui.EXIT) {
 			auto newTime = time_point_cast<us>(Time::now());

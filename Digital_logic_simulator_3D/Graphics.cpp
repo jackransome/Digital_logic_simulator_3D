@@ -47,6 +47,7 @@ void Graphics::initVulkan() {
 	createTextureSampler();
 	loadModels();
 	loadFlatImageModels();
+	loadGrid();
 	loadObjects();
 	createVertexBuffer();
 	createIndexBuffer();
@@ -1908,7 +1909,6 @@ void Graphics::loadModels()
 	loadModel("models/XorGate.obj", glm::vec4(0.5, 0.5, 0.9, 1) + glm::vec4(0.6, 0.6, 0.6, 1), glm::vec3(1, 1, 1)); // XorGate on : 19
 	loadModel("models/box.obj", glm::vec4(0.5, 0.5, 0.5, 1), glm::vec3(1, 1, 1)); // LED off : 20
 	loadModel("models/box.obj", glm::vec4(0.5, 0.5, 0.5, 1) + glm::vec4(0.6, 0.6, 0.6, 1), glm::vec3(1, 1, 1)); // LED on : 21
-
 }
 
 void Graphics::loadObjects() {
@@ -2022,6 +2022,60 @@ void Graphics::loadFlatImageModels(){
 	loadFlatImageModel(80, 80, glm::vec2(1600 + 80 * 4, 0), glm::vec2(1600 + 80 * 5, 80)); // xor image : 108
 	loadFlatImageModel(80, 80, glm::vec2(1600 + 80 * 5, 0), glm::vec2(1600 + 80 * 6, 80)); // led image : 109
 	loadFlatImageModel(80, 80, glm::vec2(1600 + 80 * 6, 0), glm::vec2(1600 + 80 * 7, 80)); // button image : 110
+}
+
+void Graphics::loadGrid() {
+	float spacing = 1;
+	float linesEachSide = 20;
+	Vertex temp = {};
+	temp.texCoord = glm::vec2(-100, -100);
+	temp.pos = glm::vec3(0, 0, 0);
+	temp.normal = glm::vec3(0, 1, 0);
+	temp.color = glm::vec4(0,0,0,1);
+	int Vertexes = 0;
+	for (int i = 0; i < linesEachSide * 2 + 1; i++) {
+		temp.pos = glm::vec3((i - linesEachSide)*spacing, 0, 0);
+		if (i % 2) {
+			temp.pos.z = -linesEachSide * spacing;
+			vertices.push_back(temp);
+			temp.pos.z = linesEachSide * spacing;
+			vertices.push_back(temp);
+		}
+		else {
+			temp.pos.z = -linesEachSide * spacing;
+			vertices.push_back(temp);
+			temp.pos.z = linesEachSide *  spacing;
+			vertices.push_back(temp);
+		}
+		Vertexes += 2;
+		indices.push_back(vertices.size() - 2);
+		indices.push_back(vertices.size() - 1);
+	}
+
+	for (int i = 0; i < linesEachSide * 2 + 1; i++) {
+		temp.pos = glm::vec3(0, 0, (i - linesEachSide)*spacing);
+		if (i % 2) {
+			temp.pos.x = -linesEachSide * spacing;
+			vertices.push_back(temp);
+			temp.pos.x = linesEachSide * spacing;
+			vertices.push_back(temp);
+		}
+		else {
+			temp.pos.x = -linesEachSide * spacing;
+			vertices.push_back(temp);
+			temp.pos.x = linesEachSide * spacing;
+			vertices.push_back(temp);
+		}
+		Vertexes += 2;
+		indices.push_back(vertices.size() - 2);
+		indices.push_back(vertices.size() - 1);
+	}
+	
+	// creating the model struct
+	models.push_back(Model());
+	models[models.size() - 1].offset = sizeOfAllModels;
+	models[models.size() - 1].size = Vertexes;
+	sizeOfAllModels += Vertexes; //111
 }
 
 void Graphics::setUpCamera() {
@@ -2255,7 +2309,7 @@ void Graphics::setFreeLook(bool value) {
 void Graphics::setObjectsWireFrame(bool value) {
 	for (auto &object : objects)
 	{
-		object.wireFrame = value;
+		//object.wireFrame = value;
 	}
 }
 
