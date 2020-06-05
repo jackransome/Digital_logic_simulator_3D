@@ -79,7 +79,7 @@ void LoadAndSaveWorkspace::saveBlock(Component* _component)
 	char charDirection[8];
 	sprintf_s(charDirection, "%d", (int)_component->direction);
 	char tempChar[100];
-	char integer_string[4];
+	char integer_string[5];
 	sprintf_s(integer_string, "%d", componentCounter + 1);
 	char blockChar[500] = "<B";
 	strcat_s(blockChar, integer_string);

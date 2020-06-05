@@ -211,9 +211,9 @@ private:
 
 	std::vector<QuickDraw> quickDraws;
 
-	const int MAX_OBJECTS = 9800;
+	const int MAX_OBJECTS = 98000;
 
-	const int MAX_QUICKDRAWS = 200;
+	const int MAX_QUICKDRAWS = 2000;
 
 	int sizeOfAllModels = 0;
 

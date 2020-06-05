@@ -25,7 +25,7 @@ private:
 	void addBlockFromXML(tinyxml2::XMLElement* _parsedXML, DigitalLogic* _digitalLogic);
 	void saveBlock(Component* _component);
 	//The temporary char where XML data is stored before being put into the XML file
-	char xmlFileChar[100000];
+	char xmlFileChar[500000];
 	tinyxml2::XMLDocument xmlFile;
 	std::vector<std::string> fileNames;
 

@@ -124,7 +124,7 @@ int main()
 					}
 
 					if (globals::input.keys.keyCounts["f"]) {
-						digitalLogic.addComponent(cameraPos.x, cameraPos.y, cameraPos.z, wire);
+						digitalLogic.addComponent(floor(cameraPos.x), floor(cameraPos.y), floor(cameraPos.z), wire);
 					}
 
 					if (globals::input.keys.keyCounts["mouseRight"] == 1) {
