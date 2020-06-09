@@ -16,6 +16,7 @@ void Graphics::initWindow() {
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
+	glfwWindowHint(GLFW_RESIZABLE, false);
 	window = glfwCreateWindow(WIDTH, HEIGHT, "Digital Logic Simulator 3D", nullptr, nullptr);
 	glfwSetWindowUserPointer(window, this);
 	glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
@@ -2006,7 +2007,7 @@ void Graphics::loadFlatImageModels(){
 	loadFlatImageModel(800, 200, glm::vec2(0, 200), glm::vec2(800, 400)); // exit button : 94
 	loadFlatImageModel(800, 200, glm::vec2(800, 200), glm::vec2(1600, 400)); // save button : 95
 	loadFlatImageModel(800, 200, glm::vec2(0, 400), glm::vec2(800, 600)); // save workspace button : 96
-	loadFlatImageModel(800, 200, glm::vec2(800, 400), glm::vec2(1600, 600)); // help button : 97
+	loadFlatImageModel(400, 200, glm::vec2(1200, 400), glm::vec2(1600, 600)); // help button : 97
 	loadFlatImageModel(800, 200, glm::vec2(0, 883), glm::vec2(800, 1083)); // ok button : 98
 	loadFlatImageModel(800, 200, glm::vec2(0, 1083), glm::vec2(800, 1283)); // cancel button : 99
 	//some flat coloured squares for colour rectangle/square drawing:
@@ -2022,6 +2023,8 @@ void Graphics::loadFlatImageModels(){
 	loadFlatImageModel(80, 80, glm::vec2(1600 + 80 * 4, 0), glm::vec2(1600 + 80 * 5, 80)); // xor image : 108
 	loadFlatImageModel(80, 80, glm::vec2(1600 + 80 * 5, 0), glm::vec2(1600 + 80 * 6, 80)); // led image : 109
 	loadFlatImageModel(80, 80, glm::vec2(1600 + 80 * 6, 0), glm::vec2(1600 + 80 * 7, 80)); // button image : 110
+	loadFlatImageModel(400, 200, glm::vec2(800, 400), glm::vec2(1200, 600)); // back button : 111
+	loadFlatImageModel(800, 200, glm::vec2(800, 883), glm::vec2(1600, 1083)); // new workspace button : 112
 }
 
 void Graphics::loadGrid() {
@@ -2075,7 +2078,7 @@ void Graphics::loadGrid() {
 	models.push_back(Model());
 	models[models.size() - 1].offset = sizeOfAllModels;
 	models[models.size() - 1].size = Vertexes;
-	sizeOfAllModels += Vertexes; //111
+	sizeOfAllModels += Vertexes; //113
 }
 
 void Graphics::setUpCamera() {

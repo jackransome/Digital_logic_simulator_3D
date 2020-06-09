@@ -292,6 +292,16 @@ void Input::mouse_button_callback(int button, int action, int mods)
 	}
 }
 
+void Input::setInMenu(bool _inMenu){
+	glfwSetCursorPos(windowPointer, windowWidth / 2, windowHeight / 2);
+	inMenu = _inMenu;
+}
+
+bool Input::getInMenu()
+{
+	return inMenu;
+}
+
 //Another callback, this time for detecting whether or not the window is in focus
 void Input::window_focus_callback(int focused)
 {

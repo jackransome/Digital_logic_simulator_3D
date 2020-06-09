@@ -106,7 +106,6 @@ public:
 	std::string inputString = "";
 	KeyCounts keys;
 	bool stringInputEnabled = true;
-	bool inMenu = false;
 	bool EXIT = false;
 	void run();
 	double xpos, ypos;
@@ -120,7 +119,10 @@ public:
 	void key_callback(int key, int scancode, int action, int mods);
 	void mouse_button_callback(int button, int action, int mods);
 	bool inFocus = true;
+	void setInMenu(bool _inMenu);
+	bool getInMenu();
 	void window_focus_callback(int focused);
 private:
+	bool inMenu = false;
 	int mouseScrollValue = 0;
 };

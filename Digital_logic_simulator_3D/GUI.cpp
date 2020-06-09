@@ -46,6 +46,25 @@ void GUI::updateButtons(){
 		case helpMenuCommand:
 			loadHelpMenu();
 			break;
+		case backCommand:
+			switch (menuState) {
+			case mainMenu:
+				globals::input.setInMenu(false);
+				break;
+			case saveMenu:
+				loadMainMenu();
+				break;
+			case loadMenu:
+				loadMainMenu();
+				break;
+			case helpMenu:
+				loadMainMenu();
+				break;
+			}
+			break;
+		case newCommand:
+			digitalLogic->clearComponents();
+			break;
 		}
 	}
 }
@@ -86,11 +105,14 @@ void GUI::loadMainMenu(){
 	menuState = mainMenu;
 	buttons.buttons.clear();
 	textBoxs.clear();
-	buttons.addButton(92, glm::vec2(-200, -300), glm::vec2(400, 100), loadMenuCommand);
-	buttons.addButton(95, glm::vec2(-200, -150), glm::vec2(400, 100), saveCommand);
-	buttons.addButton(93, glm::vec2(-200, 0), glm::vec2(400, 100), saveMenuCommand);
-	buttons.addButton(97, glm::vec2(-200, 150), glm::vec2(400, 100), helpMenuCommand);
+	buttons.addButton(112, glm::vec2(-200, -300), glm::vec2(400, 100), newCommand);
+	buttons.addButton(92, glm::vec2(-200, -150), glm::vec2(400, 100), loadMenuCommand);
+	buttons.addButton(95, glm::vec2(-200, 0), glm::vec2(400, 100), saveCommand);
+	buttons.addButton(93, glm::vec2(-200, 150), glm::vec2(400, 100), saveMenuCommand);
 	buttons.addButton(94, glm::vec2(-200, 300), glm::vec2(400, 100), exitCommand);
+
+	buttons.addButton(97, glm::vec2(1920 / 2 - 100 - 200 , -450), glm::vec2(200, 100), helpMenuCommand);
+	buttons.addButton(111, glm::vec2(-1920 / 2 + 100, -450), glm::vec2(200, 100), backCommand);
 }
 
 void GUI::loadSaveMenu() {
@@ -106,6 +128,9 @@ void GUI::loadSaveMenu() {
 	globals::input.clearInputString();
 	buttons.addButton(95, glm::vec2(-200, 0), glm::vec2(400, 100), saveAsCommand);
 	buttons.addButton(99, glm::vec2(-200, 150), glm::vec2(400, 100), mainMenuCommand);
+
+	buttons.addButton(97, glm::vec2(1920 / 2 - 100 - 200, -450), glm::vec2(200, 100), helpMenuCommand);
+	buttons.addButton(111, glm::vec2(-1920 / 2 + 100, -450), glm::vec2(200, 100), backCommand);
 }
 void GUI::loadLoadMenu() {
 	menuState = loadMenu;
@@ -120,16 +145,22 @@ void GUI::loadLoadMenu() {
 	globals::input.clearInputString();
 	buttons.addButton(98, glm::vec2(-200, 0), glm::vec2(400, 100), loadCommand);
 	buttons.addButton(99, glm::vec2(-200, 150), glm::vec2(400, 100), mainMenuCommand);
+
+	buttons.addButton(97, glm::vec2(1920 / 2 - 100 - 200, -450), glm::vec2(200, 100), helpMenuCommand);
+	buttons.addButton(111, glm::vec2(-1920 / 2 + 100, -450), glm::vec2(200, 100), backCommand);
 }
 void GUI::loadHelpMenu() {
 	menuState = helpMenu;
 	buttons.buttons.clear();
 	textBoxs.clear();
 	buttons.addButton(99, glm::vec2(-200, 0), glm::vec2(40, 100), mainMenuCommand);
+
+	buttons.addButton(97, glm::vec2(1920 / 2 - 100 - 200, -450), glm::vec2(200, 100), helpMenuCommand);
+	buttons.addButton(111, glm::vec2(-1920 / 2 + 100, -450), glm::vec2(200, 100), backCommand);
 }
 
 void GUI::drawGUI(componentType _componentTypeSelected){
-	if (globals::input.inMenu) {
+	if (globals::input.getInMenu()) {
 		//headers
 		switch (menuState) {
 		case mainMenu:
@@ -177,8 +208,6 @@ void GUI::drawHotbar(componentType _componentTypeSelected){
 	}
 	globals::gfx.quickDrawPixelCoordinates(glm::vec3(-width / 2 + border, globals::gfx.getSwapChainExtent().y / 2 - height - bottomPadding + border, 0), glm::vec3(width - border * 2, height - border * 2, 1), 101);
 	globals::gfx.quickDrawPixelCoordinates(glm::vec3(-width / 2, globals::gfx.getSwapChainExtent().y / 2 - height - bottomPadding, 0), glm::vec3(width, height, 1), 100);
-
-	
 }
 
 

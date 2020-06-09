@@ -43,7 +43,7 @@ int main()
 		//the green origin model
 		//globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 2);
 		//grid
-		globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 111, true);
+		globals::gfx.addObject(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 113, true);
 		glm::vec3 cameraDirection;
 		while (!globals::gfx.shouldClose && !gui.EXIT) {
 			auto newTime = time_point_cast<us>(Time::now());
@@ -70,7 +70,7 @@ int main()
 					cos(globals::input.cameraAngle.x - 3.14f / 2.0f)
 				);
 
-				if (!globals::input.inMenu) {
+				if (!globals::input.getInMenu()) {
 					if (globals::input.keys.keyCounts["w"]) {
 						cameraPos += glm::vec3(forward.x, 0, forward.z) * 0.1f;
 					}
@@ -142,7 +142,7 @@ int main()
 				}
 
 				if (globals::input.keys.keyCounts["mouseLeft"] == 1) {
-					if (globals::input.inMenu) {
+					if (globals::input.getInMenu()) {
 						gui.updateButtons();
 						gui.checkTextBoxs();
 					}
@@ -152,7 +152,7 @@ int main()
 				}
 
 				if (globals::input.keys.keyCounts["mouseMiddle"] == 1) {
-					if (!globals::input.inMenu) {
+					if (!globals::input.getInMenu()) {
 						componentManipulation.switchButton(cameraPos, cameraDirection);
 					}
 				}
@@ -161,14 +161,14 @@ int main()
 				//printf("x: %f, y: %f\n", globals::input.mousePosInWindow.x, globals::input.mousePosInWindow.y);
 
 				if (globals::input.keys.keyCounts["escape"] == 1) {
-					if (globals::input.inMenu) {
-						globals::input.inMenu = false;
+					if (globals::input.getInMenu()) {
+						globals::input.setInMenu(false);
 					} else{
-						globals::input.inMenu = true;
+						globals::input.setInMenu(true);
 						gui.loadMainMenu();
 					}
 				}
-				if (globals::input.inMenu) {
+				if (globals::input.getInMenu()) {
 					gui.updateTextBoxs();
 				}
 				accumulator -= globals::dt;
