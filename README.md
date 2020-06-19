@@ -1,5 +1,6 @@
 # Digital_logic_simulator_3D
-updating and improving a 2017 project
+An application for planning and simulating digital logic circuits in 3D space
+(This projects was first created and "finished" in 2017, This is a vastly improved version that will continue to be updated and maintained)
 
 The 4 logic gates available:
 
