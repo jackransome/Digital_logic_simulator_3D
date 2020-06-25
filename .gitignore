@@ -352,3 +352,4 @@ MigrationBackup/
 .ionide/
 
 # ignoring my libraries folder which holds glm etc
+Libraries/
