@@ -3,18 +3,20 @@ An application for planning and simulating digital logic circuits in 3D space
 (This projects was first created and "finished" in 2017, This is a vastly improved version that will continue to be updated and maintained)
 
 This project was implemented using:
-  C++
-  Vulkan
-  glfw
-  glm
-  stb_image
-  tiny_obj_loader
-  tinyxml2
+
+    C++
+    Vulkan
+    glfw
+    glm
+    stb_image
+    tiny_obj_loader
+    tinyxml2
 
 Features:
-  tools to build digital logic circuits
-  ability to simulate these circuits
-  saving and loading functionality using XML
+
+    tools to build digital logic circuits
+    ability to simulate these circuits
+    saving and loading functionality using XML
   
 The 4 logic gates available:
 
