@@ -154,8 +154,6 @@ void GUI::loadHelpMenu() {
 	buttons.buttons.clear();
 	textBoxs.clear();
 	buttons.addButton(99, glm::vec2(-200, 0), glm::vec2(40, 100), mainMenuCommand);
-
-	buttons.addButton(97, glm::vec2(1920 / 2 - 100 - 200, -450), glm::vec2(200, 100), helpMenuCommand);
 	buttons.addButton(111, glm::vec2(-1920 / 2 + 100, -450), glm::vec2(200, 100), backCommand);
 }
 
