@@ -97,6 +97,7 @@ void Graphics::cleanupSwapChain() {
 }
 
 void Graphics::cleanup() {
+
 	cleanupSwapChain();
 
 	vkDestroySampler(device, textureSampler, nullptr);
