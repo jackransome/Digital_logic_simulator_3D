@@ -8,7 +8,7 @@ LoadAndSaveWorkspace::~LoadAndSaveWorkspace()
 {
 }
 
-void LoadAndSaveWorkspace::loadWorkSpace(DigitalLogic* _digitalLogic, std::string _xmlPath)
+void LoadAndSaveWorkspace::loadWorkSpace(CircuitManager* _circuitManager, std::string _xmlPath)
 {
 	if (!doesFileExist(_xmlPath)) {
 		std::cout << "file " << _xmlPath << " not found" << std::endl;
@@ -32,7 +32,7 @@ void LoadAndSaveWorkspace::loadWorkSpace(DigitalLogic* _digitalLogic, std::strin
 		strcat_s(p, integer_string);
 		//using tinyXML to parse the xml in the file for this particular block
 		tinyxml2::XMLElement* parsedxml = xmlFile.FirstChildElement(p);
-		addBlockFromXML(parsedxml, _digitalLogic);
+		addBlockFromXML(parsedxml, _circuitManager);
 	}
 }
 
@@ -131,10 +131,10 @@ std::vector<std::string> LoadAndSaveWorkspace::getFileNames()
 	return fileNames;
 }
 
-void LoadAndSaveWorkspace::addBlockFromXML(tinyxml2::XMLElement* _parsedXML, DigitalLogic* _digitalLogic)
+void LoadAndSaveWorkspace::addBlockFromXML(tinyxml2::XMLElement* _parsedXML, CircuitManager* _circuitManager)
 {
 	//parsing the xml data and using it the create a new block which is then added to the blocks vector
-	_digitalLogic->addComponent(
+	_circuitManager->addComponent(
 		(int)atof((char*)(const char*)(_parsedXML->FirstChildElement("x"))->GetText()),
 		(int)atof((char*)(const char*)(_parsedXML->FirstChildElement("y"))->GetText()),
 		(int)atof((char*)(const char*)(_parsedXML->FirstChildElement("z"))->GetText()),

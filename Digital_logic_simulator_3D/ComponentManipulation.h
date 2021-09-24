@@ -1,11 +1,11 @@
 #pragma once
-#include "DigitalLogic.h"
+#include "CircuitManager.h"
 
 
 class ComponentManipulation {
 public:
 	ComponentManipulation();
-	void init(DigitalLogic* _digitalLogicPointer);
+	void init(CircuitManager* _circuitManagerPointer);
 	void placeComponent(glm::vec3 _cameraPosition, glm::vec3 _cameraDirection, componentType _componentTypeSelected);
 	void deleteComponent(glm::vec3 _cameraPosition, glm::vec3 _cameraDirection);
 	glm::vec3 getSelectedComponent(glm::vec3 _cameraPosition, glm::vec3 _cameraDirection);
@@ -18,6 +18,6 @@ private:
 	float get3DDistance(glm::vec3 _p1, glm::vec3 _p2);
 	glm::vec3 nullComponent = glm::vec3(-0.1, -0.1, -0.1);
 	glm::vec3 nullIntersection = glm::vec3(0.5, 0.5, 0.5);
-	DigitalLogic* digitalLogicPointer;
+	CircuitManager* circuitManagerPointer;
 
 };

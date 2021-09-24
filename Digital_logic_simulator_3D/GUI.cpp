@@ -2,8 +2,8 @@
 
 GUI::GUI(){}
 
-void GUI::init(DigitalLogic* _digitalLogic){
-	digitalLogic = _digitalLogic;
+void GUI::init(CircuitManager* _circuitManager){
+	circuitManager = _circuitManager;
 }
 
 void GUI::updateButtons(){
@@ -14,17 +14,17 @@ void GUI::updateButtons(){
 			break;
 		case saveCommand:
 			if (currentFileName != "") {
-				loadAndSaveWorkspace.saveWorkSpace(digitalLogic->getComponentsPointer(), currentFileName);
+				loadAndSaveWorkspace.saveWorkSpace(circuitManager->getComponentsPointer(), currentFileName);
 			}
 			break;
 		case saveAsCommand:
-			loadAndSaveWorkspace.saveWorkSpace(digitalLogic->getComponentsPointer(), textBoxs[0].text);
+			loadAndSaveWorkspace.saveWorkSpace(circuitManager->getComponentsPointer(), textBoxs[0].text);
 			currentFileName = textBoxs[0].text;
 			loadMainMenu();
 			break;
 		case loadCommand:
-			digitalLogic->clearComponents();
-			loadAndSaveWorkspace.loadWorkSpace(digitalLogic, textBoxs[0].text);
+			circuitManager->clearComponents();
+			loadAndSaveWorkspace.loadWorkSpace(circuitManager, textBoxs[0].text);
 			currentFileName = textBoxs[0].text;
 			loadMainMenu();
 			break;
@@ -63,7 +63,7 @@ void GUI::updateButtons(){
 			}
 			break;
 		case newCommand:
-			digitalLogic->clearComponents();
+			circuitManager->clearComponents();
 			break;
 		}
 	}

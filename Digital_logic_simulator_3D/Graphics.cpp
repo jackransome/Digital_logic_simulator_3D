@@ -1218,6 +1218,7 @@ void Graphics::createIndexBuffer() {
 void Graphics::createStorageBuffer() {
 	std::vector<glm::mat4> storageBufferData;
 	int notDrawn = 0;
+	
 	for (int i = 0; i < objects.size(); i++) {
 		if (!objects[i].visible && objects[i].relevant) {
 			objects[i].transformData *= 0;
@@ -1254,7 +1255,7 @@ void Graphics::createStorageBuffer() {
 }
 
 void Graphics::updateStorageBuffer() {
-
+	std::cout << "objects.size() = " << objects.size() << "\n";
 	std::vector<glm::mat4> storageBufferData;
 	for (int i = 0; i < objects.size(); i++) {
 		if (!objects[i].visible || !objects[i].relevant) {

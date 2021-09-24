@@ -127,6 +127,7 @@
   <ItemGroup>
     <ClInclude Include="Button.h" />
     <ClInclude Include="Buttons.h" />
+    <ClInclude Include="CircuitManager.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManipulation.h" />
     <ClInclude Include="DigitalLogic.h" />
@@ -141,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Buttons.cpp" />
+    <ClCompile Include="CircuitManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManipulation.cpp" />
     <ClCompile Include="DigitalLogic.cpp" />

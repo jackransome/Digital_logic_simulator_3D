@@ -31,13 +31,13 @@ int main()
 
 		glm::vec3 cameraPos = glm::vec3(0, 0, 0);
 
-		DigitalLogic digitalLogic;
+		CircuitManager circuitManager;
 		GUI gui;
-		gui.init(&digitalLogic);
+		gui.init(&circuitManager);
 		gui.loadMainMenu();
 		ComponentManipulation componentManipulation;
-		componentManipulation.init(&digitalLogic);
-		digitalLogic.init();
+		componentManipulation.init(&circuitManager);
+		circuitManager.init();
 
 		componentType componentTypeSelected = wire;
 
@@ -125,7 +125,7 @@ int main()
 					}
 
 					if (globals::input.keys.keyCounts["f"]) {
-						digitalLogic.addComponent(floor(cameraPos.x), floor(cameraPos.y), floor(cameraPos.z), wire);
+						circuitManager.addComponent(floor(cameraPos.x), floor(cameraPos.y), floor(cameraPos.z), wire);
 					}
 
 					if (globals::input.keys.keyCounts["mouseRight"] == 1) {
@@ -181,8 +181,8 @@ int main()
 			globals::gfx.quickDrawPixelCoordinates(glm::vec3(-10, -1, 0), glm::vec3(20, 2, 0), 103);
 			globals::gfx.quickDrawPixelCoordinates(glm::vec3(-1, -10, 0), glm::vec3(2, 20, 0), 103);
 
-			digitalLogic.runLogic();
-			digitalLogic.updateModels();
+			circuitManager.runLogic();
+			circuitManager.updateModels();
 			globals::gfx.run();
 		}
 	}

@@ -2,8 +2,8 @@
 
 ComponentManipulation::ComponentManipulation() {}
 
-void ComponentManipulation::init(DigitalLogic * _digitalLogicPointer){
-	digitalLogicPointer = _digitalLogicPointer;
+void ComponentManipulation::init(CircuitManager * _circuitManagerPointer){
+	circuitManagerPointer = _circuitManagerPointer;
 }
 
 void ComponentManipulation::placeComponent(glm::vec3 _cameraPosition, glm::vec3 _cameraDirection, componentType _componentTypeSelected){
@@ -21,22 +21,22 @@ void ComponentManipulation::placeComponent(glm::vec3 _cameraPosition, glm::vec3 
 	}
 	switch (face) {
 	case 0:
-		digitalLogicPointer->addComponent(component.x, component.y + 1, component.z, _componentTypeSelected, positiveY);
+		circuitManagerPointer->addComponent(component.x, component.y + 1, component.z, _componentTypeSelected, positiveY);
 		break;
 	case 1:
-		digitalLogicPointer->addComponent(component.x, component.y - 1, component.z, _componentTypeSelected, negativeY);
+		circuitManagerPointer->addComponent(component.x, component.y - 1, component.z, _componentTypeSelected, negativeY);
 		break;
 	case 2:
-		digitalLogicPointer->addComponent(component.x + 1, component.y, component.z, _componentTypeSelected, positiveX);
+		circuitManagerPointer->addComponent(component.x + 1, component.y, component.z, _componentTypeSelected, positiveX);
 		break;
 	case 3:
-		digitalLogicPointer->addComponent(component.x - 1, component.y, component.z, _componentTypeSelected, negativeX);
+		circuitManagerPointer->addComponent(component.x - 1, component.y, component.z, _componentTypeSelected, negativeX);
 		break;
 	case 4:
-		digitalLogicPointer->addComponent(component.x, component.y, component.z + 1, _componentTypeSelected, positiveZ);
+		circuitManagerPointer->addComponent(component.x, component.y, component.z + 1, _componentTypeSelected, positiveZ);
 		break;
 	case 5:
-		digitalLogicPointer->addComponent(component.x, component.y, component.z - 1, _componentTypeSelected, negativeZ);
+		circuitManagerPointer->addComponent(component.x, component.y, component.z - 1, _componentTypeSelected, negativeZ);
 		break;
 	}
 }
@@ -44,7 +44,7 @@ void ComponentManipulation::placeComponent(glm::vec3 _cameraPosition, glm::vec3 
 void ComponentManipulation::deleteComponent(glm::vec3 _cameraPosition, glm::vec3 _cameraDirection){
 	glm::vec3 component = getSelectedComponent(_cameraPosition, _cameraDirection);
 	if (component != nullComponent) {
-		digitalLogicPointer->removeComponent(component.x, component.y, component.z);
+		circuitManagerPointer->removeComponent(component.x, component.y, component.z);
 	}
 }
 
@@ -53,7 +53,7 @@ glm::vec3 ComponentManipulation::getSelectedComponent(glm::vec3 _cameraPosition,
 	float radius = 150;
 	for (int i = 0; i < radius; i++) {
 		temp += glm::vec3(_cameraDirection.x / 25, _cameraDirection.y / 25, _cameraDirection.z / 25);
-		if (digitalLogicPointer->getComponent(floor(temp.x), floor(temp.y), floor(temp.z)) != -1) {
+		if (circuitManagerPointer->getComponent(floor(temp.x), floor(temp.y), floor(temp.z)) != -1) {
 			return glm::vec3(floor(temp.x), floor(temp.y), floor(temp.z));
 		}
 	}
@@ -159,12 +159,12 @@ float ComponentManipulation::get3DDistance(glm::vec3 _p1, glm::vec3 _p2) {
 
 void ComponentManipulation::switchButton(glm::vec3 _cameraPosition, glm::vec3 _cameraDirection) {
 	glm::vec3 component = getSelectedComponent(_cameraPosition, _cameraDirection);
-	if (digitalLogicPointer->getComponentType(component.x, component.y, component.z) == button) {
-		if (digitalLogicPointer->getComponentState(component.x, component.y, component.z) == true) {
-			digitalLogicPointer->setComponentState(component.x, component.y, component.z, false);
+	if (circuitManagerPointer->getComponentType(component.x, component.y, component.z) == button) {
+		if (circuitManagerPointer->getComponentState(component.x, component.y, component.z) == true) {
+			circuitManagerPointer->setComponentState(component.x, component.y, component.z, false);
 		}
 		else {
-			digitalLogicPointer->setComponentState(component.x, component.y, component.z, true);
+			circuitManagerPointer->setComponentState(component.x, component.y, component.z, true);
 		}
 	}
 }

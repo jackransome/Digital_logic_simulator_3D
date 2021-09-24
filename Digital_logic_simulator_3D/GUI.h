@@ -2,7 +2,7 @@
 #include "Buttons.h"
 #include "Textbox.h"
 #include "loadAndSaveWorkSpace.h"
-#include "DigitalLogic.h"
+#include "CircuitManager.h"
 #include "Globals.h"
 
 enum MenuState { loadMenu, saveMenu, mainMenu, helpMenu };
@@ -10,7 +10,7 @@ enum MenuState { loadMenu, saveMenu, mainMenu, helpMenu };
 class GUI {
 public:
 	GUI();
-	void init(DigitalLogic* _digitalLogic);
+	void init(CircuitManager* _circuitManager);
 	void updateButtons();
 	void checkTextBoxs();
 	void updateTextBoxs();
@@ -30,7 +30,7 @@ private:
 	LoadAndSaveWorkspace loadAndSaveWorkspace;
 	std::string currentFileName = "";
 	MenuState menuState = mainMenu;
-	DigitalLogic* digitalLogic;
+	CircuitManager* circuitManager;
 	std::vector<Textbox> textBoxs;
 	//vector containing the filename's of all saved workspaces
 	std::vector<std::string> savedFiles;

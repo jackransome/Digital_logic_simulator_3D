@@ -16,7 +16,7 @@ void main() {
     //outColor = fragColor + vec4(test, 1);// texture(texSampler, fragTexCoord);
 	vec3 tex = texture(texSampler, fragTexCoord).rgb;
 	vec3 lightColor = vec3(1,1,1);
-	vec3 lightPos = vec3(1000,1000,1000);
+	vec3 lightPos = vec3(1000,2000,3000);
 	vec4 text = texture(texSampler, fragTexCoord);
 	//vec3 objectColor = vec3(text.x, text.y, text.z);
 	vec3 objectColor = vec3(fragColor.x, fragColor.y, fragColor.z);//vec3(0.2,0.4,1);
