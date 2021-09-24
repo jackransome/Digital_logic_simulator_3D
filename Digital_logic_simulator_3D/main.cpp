@@ -7,6 +7,7 @@
 #include "ComponentManipulation.h"
 #include "GUI.h"
 
+
 using std::chrono::time_point_cast;
 using std::chrono::duration_cast;
 
@@ -187,11 +188,14 @@ int main()
 	}
 	catch (const std::runtime_error& e)
 	{
+
 		std::cerr << e.what() << std::endl;
 		for (int i = 0; i < 100000000; i++) {}
+		while (true) {
+			std::cout << "";
+		}
 		return EXIT_FAILURE;
 	}
-
 	globals::gfx.cleanup();
 
 	return EXIT_SUCCESS;

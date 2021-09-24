@@ -2,7 +2,14 @@
 #include <vector>
 #include "Component.h"
 #include "Globals.h"
-//blocks class
+
+struct WireNode {
+
+
+	//array of wire components
+	
+};
+
 class DigitalLogic {
 public:
 	DigitalLogic();

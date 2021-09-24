@@ -128,7 +128,7 @@ struct QueueFamilyIndices {
 const std::string TEXTURE_PATH = "textures/menuTexture.png";
 
 const std::vector<const char*> validationLayers = {
-	"VK_LAYER_LUNARG_standard_validation"
+	"VK_LAYER_KHRONOS_validation"
 };
 
 const std::vector<const char*> deviceExtensions = {
